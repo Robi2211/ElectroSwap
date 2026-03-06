@@ -3,11 +3,14 @@
 import os
 from flask import Flask
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from pymongo import MongoClient
 
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 login_manager.login_message_category = "info"
+
+csrf = CSRFProtect()
 
 # Global MongoDB references
 mongo_client = None
@@ -19,6 +22,9 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "electroswap-dev-secret-key-change-in-prod")
     app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb://localhost:27017/electroswap")
+
+    # --------------- CSRF Protection ---------------
+    csrf.init_app(app)
 
     # --------------- MongoDB ---------------
     global mongo_client, db
