@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Electro Swap – Hardware Shop{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Category Sidebar -->
+    <div class="col-lg-2 mb-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header fw-bold"><i class="bi bi-filter"></i> Categories</div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('index') }}"
+                   class="list-group-item list-group-item-action bg-dark text-light {% if not active_category %}active{% endif %}">
+                    All Products
+                </a>
+                {% for cat in categories %}
+                    <a href="{{ url_for('index', category=cat) }}"
+                       class="list-group-item list-group-item-action bg-dark text-light {% if active_category == cat %}active{% endif %}">
+                        {{ cat }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="col-lg-10">
+        {% if search %}
+            <h5 class="mb-3 text-secondary">Search results for "<span class="text-warning">{{ search }}</span>"</h5>
+        {% elif active_category %}
+            <h5 class="mb-3 text-secondary">Category: <span class="text-warning">{{ active_category }}</span></h5>
+        {% endif %}
+
+        {% if products|length == 0 %}
+            <div class="text-center text-secondary py-5">
+                <i class="bi bi-search display-1"></i>
+                <p class="mt-3">No products found. <a href="{{ url_for('seed') }}" class="text-warning">Seed the database</a> to get started.</p>
+            </div>
+        {% endif %}
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 bg-dark border-secondary product-card">
+                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}"
+                             style="height:220px; object-fit:cover;" loading="lazy"
+                             onerror="this.src='https://placehold.co/400x220/1a1a2e/e0e0e0?text={{ product.category }}'">
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-secondary mb-2 align-self-start">{{ product.category }}</span>
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-secondary small flex-grow-1">{{ product.description[:80] }}…</p>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="fs-5 fw-bold text-warning">CHF {{ "%.2f"|format(product.price) }}</span>
+                                <span class="text-secondary small">
+                                    {% if product.stock > 0 %}
+                                        <i class="bi bi-check-circle text-success"></i> In stock ({{ product.stock }})
+                                    {% else %}
+                                        <i class="bi bi-x-circle text-danger"></i> Out of stock
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-secondary d-flex gap-2">
+                            <a href="{{ url_for('product_detail', product_id=product._id) }}" class="btn btn-outline-light btn-sm flex-grow-1">
+                                <i class="bi bi-eye"></i> Details
+                            </a>
+                            {% if session.get('user_id') and product.stock > 0 %}
+                                <form action="{{ url_for('add_to_basket', product_id=product._id) }}" method="POST">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button class="btn btn-warning btn-sm" type="submit">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}My Orders – Electro Swap{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <h3><i class="bi bi-box-seam"></i> My Orders</h3>
+        <hr class="border-secondary">
+
+        {% if orders|length == 0 %}
+            <div class="text-center py-5 text-secondary">
+                <i class="bi bi-inbox display-1"></i>
+                <p class="mt-3">You haven't placed any orders yet. <a href="{{ url_for('index') }}" class="text-warning">Start shopping</a></p>
+            </div>
+        {% endif %}
+
+        {% for order in orders %}
+            <div class="card bg-dark border-secondary mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Order #{{ loop.index }}</strong>
+                        <small class="text-secondary ms-2">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                    </div>
+                    <div>
+                        <span class="badge bg-success">{{ order.status }}</span>
+                        <span class="fw-bold text-warning ms-2">CHF {{ "%.2f"|format(order.total) }}</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-dark mb-0">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Snapshot-Principle: name and price stored at time of purchase -->
+                            {% for item in order.items %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="{{ item.image }}" alt="{{ item.name }}" style="width:40px;height:40px;object-fit:cover;" class="rounded"
+                                                 onerror="this.src='https://placehold.co/40x40/1a1a2e/e0e0e0?text=IMG'">
+                                            {{ item.name }}
+                                        </div>
+                                    </td>
+                                    <td>CHF {{ "%.2f"|format(item.price) }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="text-warning">CHF {{ "%.2f"|format(item.price * item.quantity) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

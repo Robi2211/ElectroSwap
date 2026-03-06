@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block title %}{{ product.name }} – Electro Swap{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5 mb-4">
+        <img src="{{ product.image }}" class="img-fluid rounded border border-secondary" alt="{{ product.name }}"
+             onerror="this.src='https://placehold.co/600x400/1a1a2e/e0e0e0?text={{ product.category }}'">
+    </div>
+    <div class="col-md-7">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-warning">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('index', category=product.category) }}" class="text-warning">{{ product.category }}</a></li>
+                <li class="breadcrumb-item active text-light">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <h2>{{ product.name }}</h2>
+        <span class="badge bg-secondary mb-2">{{ product.brand }}</span>
+        <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+
+        <p class="mt-3 text-secondary">{{ product.description }}</p>
+
+        <h3 class="text-warning">CHF {{ "%.2f"|format(product.price) }}</h3>
+
+        <p>
+            {% if product.stock > 0 %}
+                <i class="bi bi-check-circle text-success"></i> In stock ({{ product.stock }} available)
+            {% else %}
+                <i class="bi bi-x-circle text-danger"></i> Out of stock
+            {% endif %}
+        </p>
+
+        {% if session.get('user_id') and product.stock > 0 %}
+            <form action="{{ url_for('add_to_basket', product_id=product._id) }}" method="POST" class="d-flex gap-2 mb-4">
+                <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control bg-dark text-light" style="width:80px;">
+                <button class="btn btn-warning" type="submit"><i class="bi bi-cart-plus"></i> Add to Basket</button>
+            </form>
+        {% elif not session.get('user_id') %}
+            <a href="{{ url_for('login') }}" class="btn btn-outline-warning mb-4"><i class="bi bi-box-arrow-in-right"></i> Login to buy</a>
+        {% endif %}
+
+        <!-- Criterion 2.7: Heterogeneous Specs Display -->
+        <div class="card bg-dark border-secondary">
+            <div class="card-header fw-bold"><i class="bi bi-cpu"></i> Specifications</div>
+            <div class="card-body">
+                <table class="table table-dark table-sm mb-0">
+                    <tbody>
+                        {% for key, value in product.specs.items() %}
+                            <tr>
+                                <td class="text-secondary text-capitalize">{{ key.replace('_', ' ') }}</td>
+                                <td class="fw-bold">{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews Section -->
+<div class="row mt-5">
+    <div class="col-lg-8">
+        <h4><i class="bi bi-chat-square-text"></i> Reviews ({{ reviews|length }})</h4>
+        <hr class="border-secondary">
+
+        {% if can_review %}
+            <div class="card bg-dark border-secondary mb-4">
+                <div class="card-body">
+                    <h6>Write a Review</h6>
+                    <form action="{{ url_for('add_review', product_id=product._id) }}" method="POST">
+                        <div class="mb-2">
+                            <label class="form-label">Rating</label>
+                            <select name="rating" class="form-select bg-dark text-light" style="width:120px;">
+                                <option value="5">★★★★★</option>
+                                <option value="4">★★★★☆</option>
+                                <option value="3">★★★☆☆</option>
+                                <option value="2">★★☆☆☆</option>
+                                <option value="1">★☆☆☆☆</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <textarea name="comment" class="form-control bg-dark text-light" rows="3" placeholder="Share your experience…" required></textarea>
+                        </div>
+                        <button class="btn btn-warning btn-sm" type="submit"><i class="bi bi-send"></i> Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if reviews|length == 0 %}
+            <p class="text-secondary">No reviews yet.</p>
+        {% endif %}
+
+        {% for review in reviews %}
+            <div class="card bg-dark border-secondary mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <strong><i class="bi bi-person"></i> {{ review.username }}</strong>
+                        <span class="text-warning">
+                            {% for i in range(review.rating) %}★{% endfor %}{% for i in range(5 - review.rating) %}☆{% endfor %}
+                        </span>
+                    </div>
+                    <p class="mt-2 mb-1">{{ review.comment }}</p>
+                    <small class="text-secondary">{{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+/* style.css – Electro Swap Dark Tech Theme */
+
+/* Base */
+body {
+    background-color: #0d0d1a;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%) !important;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+/* Product Cards */
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
+}
+
+/* Cards general */
+.card {
+    border-radius: 0.75rem;
+}
+
+.card-img-top {
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+/* Buttons */
+.btn-warning {
+    color: #0d0d1a;
+    font-weight: 600;
+}
+
+.btn-warning:hover {
+    color: #0d0d1a;
+    background-color: #e6ac00;
+}
+
+/* Active category */
+.list-group-item.active {
+    background-color: #ffc107 !important;
+    color: #0d0d1a !important;
+    border-color: #ffc107 !important;
+    font-weight: 600;
+}
+
+.list-group-item:hover:not(.active) {
+    background-color: #1a1a2e !important;
+}
+
+/* Tables */
+.table-dark {
+    --bs-table-bg: transparent;
+}
+
+/* Badge */
+.badge.bg-secondary {
+    background-color: #2d2d44 !important;
+}
+
+/* Footer */
+footer {
+    background-color: #0a0a15;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d0d1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Progress bars in admin */
+.progress {
+    border-radius: 0.5rem;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 0.5rem;
+}
+
+/* Form controls */
+.form-control:focus,
+.form-select:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+/* Search bar */
+.navbar .form-control {
+    border-color: #333;
+}
+
+.navbar .form-control:focus {
+    border-color: #ffc107;
+}
