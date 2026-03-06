@@ -6,6 +6,7 @@ managing the shopping basket, and processing checkout.
 Refers to Criteria 5.5–5.6 of the grading rubric.
 """
 
+import os
 import uuid
 
 from bson import ObjectId
@@ -180,4 +181,4 @@ def checkout_page():
 
 if __name__ == "__main__":
     db.seed_db()
-    app.run(debug=True)
+    app.run(debug=os.environ.get("FLASK_DEBUG", "0") == "1")
