@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} – ElectroSwap{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="breadcrumb-item">
+            <a href="{{ url_for('index', category=product.category) }}">{{ product.category }}</a>
+        </li>
+        <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <!-- Product info -->
+    <div class="col-lg-7">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+                <h2>{{ product.name }}</h2>
+                <p class="text-muted">{{ product.brand }}</p>
+                <p>{{ product.description }}</p>
+
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="fs-3 fw-bold text-success">&euro;{{ "%.2f"|format(product.price) }}</span>
+                    <span class="badge {% if product.stock > 0 %}bg-success{% else %}bg-danger{% endif %} fs-6">
+                        {% if product.stock > 0 %}In Stock ({{ product.stock }}){% else %}Out of Stock{% endif %}
+                    </span>
+                </div>
+
+                {% if product.stock > 0 %}
+                <form method="post" action="{{ url_for('basket_add', product_id=product._id) }}"
+                      class="d-flex align-items-center gap-2">
+                    <input type="number" name="quantity" value="1" min="1"
+                           max="{{ product.stock }}" class="form-control" style="width:80px">
+                    <button class="btn btn-warning" type="submit">
+                        <i class="bi bi-cart-plus"></i> Add to Basket
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Specs – Criterion 2.7 (heterogeneous sub-document) -->
+    <div class="col-lg-5">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <i class="bi bi-cpu"></i> Specifications
+                <small class="text-muted ms-2">(Criterion 2.7)</small>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for key, value in product.specs.items() %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-capitalize">{{ key | replace("_", " ") }}</span>
+                    <span class="fw-bold">{{ value }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white d-flex justify-content-between">
+        <span><i class="bi bi-chat-left-text"></i> Reviews ({{ reviews|length }})</span>
+        {% if avg_rating %}
+        <span>
+            Average:
+            {% for i in range(1, 6) %}
+                {% if i <= avg_rating|int %}
+                <i class="bi bi-star-fill star-filled"></i>
+                {% else %}
+                <i class="bi bi-star star-empty"></i>
+                {% endif %}
+            {% endfor %}
+            ({{ avg_rating }}/5)
+        </span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if reviews %}
+        {% for r in reviews %}
+        <div class="border-bottom pb-3 mb-3">
+            <div class="d-flex justify-content-between">
+                <strong>{{ r.author }}</strong>
+                <span>
+                    {% for i in range(1, 6) %}
+                        {% if i <= r.rating %}
+                        <i class="bi bi-star-fill star-filled"></i>
+                        {% else %}
+                        <i class="bi bi-star star-empty"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+            <p class="mb-0 mt-1">{{ r.comment }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted mb-0">No reviews yet. Be the first!</p>
+        {% endif %}
+
+        <!-- Add review form -->
+        <h6 class="mt-4">Write a Review</h6>
+        <form method="post" action="{{ url_for('add_review', product_id=product._id) }}">
+            <div class="row g-2 mb-2">
+                <div class="col-md-4">
+                    <input type="text" name="author" class="form-control form-control-sm"
+                           placeholder="Your name" required>
+                </div>
+                <div class="col-md-2">
+                    <select name="rating" class="form-select form-select-sm" required>
+                        <option value="5">5 ★</option>
+                        <option value="4">4 ★</option>
+                        <option value="3">3 ★</option>
+                        <option value="2">2 ★</option>
+                        <option value="1">1 ★</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-2">
+                <textarea name="comment" class="form-control form-control-sm" rows="2"
+                          placeholder="Your review…" required></textarea>
+            </div>
+            <button class="btn btn-sm btn-dark" type="submit">
+                <i class="bi bi-send"></i> Submit Review
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

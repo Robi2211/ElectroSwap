@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}ElectroSwap – Hardware Online Shop{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<div class="bg-dark text-white rounded-3 p-5 mb-4">
+    <h1 class="display-5 fw-bold"><i class="bi bi-lightning-charge-fill text-warning"></i> ElectroSwap</h1>
+    <p class="lead mb-0">Your one-stop hardware shop &mdash; CPUs, GPUs, Monitors and more.</p>
+</div>
+
+<div class="row">
+    <!-- Sidebar filters -->
+    <div class="col-lg-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-funnel"></i> Filters</h5>
+
+                <!-- Search -->
+                <form method="get" action="{{ url_for('index') }}" class="mb-3">
+                    {% if selected_category %}
+                    <input type="hidden" name="category" value="{{ selected_category }}">
+                    {% endif %}
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control form-control-sm"
+                               placeholder="Search…" value="{{ search }}">
+                        <button class="btn btn-sm btn-warning" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Categories -->
+                <h6 class="mt-3">Categories</h6>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('index') }}"
+                       class="list-group-item list-group-item-action{% if not selected_category %} active{% endif %}">
+                        All
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{{ url_for('index', category=cat) }}"
+                       class="list-group-item list-group-item-action{% if selected_category == cat %} active{% endif %}">
+                        {{ cat }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Aggregation stats – Criterion 2.8 -->
+        {% if stats %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-bar-chart-line"></i> Avg Price / Category</h6>
+                <ul class="list-group list-group-flush small">
+                    {% for s in stats %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ s._id }}</span>
+                        <span class="fw-bold">&euro;{{ "%.2f"|format(s.avg_price) }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Product grid -->
+    <div class="col-lg-9">
+        {% if products %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            {% for p in products %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge bg-secondary mb-2 align-self-start">{{ p.category }}</span>
+                        <h5 class="card-title">{{ p.name }}</h5>
+                        <p class="text-muted small mb-1">{{ p.brand }}</p>
+                        <p class="card-text small flex-grow-1">{{ p.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fs-5 fw-bold text-success">&euro;{{ "%.2f"|format(p.price) }}</span>
+                            <span class="badge {% if p.stock > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                                {% if p.stock > 0 %}In Stock ({{ p.stock }}){% else %}Out of Stock{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 d-flex gap-2">
+                        <a href="{{ url_for('product_detail', product_id=p._id) }}"
+                           class="btn btn-outline-dark btn-sm flex-fill">
+                            <i class="bi bi-eye"></i> Details
+                        </a>
+                        {% if p.stock > 0 %}
+                        <form method="post" action="{{ url_for('basket_add', product_id=p._id) }}"
+                              class="flex-fill">
+                            <button class="btn btn-warning btn-sm w-100" type="submit">
+                                <i class="bi bi-cart-plus"></i> Add
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">No products found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

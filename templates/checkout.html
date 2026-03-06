@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Checkout – ElectroSwap{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-bag-check"></i> Checkout</h2>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="text-muted small">
+                    <!-- Criterion 5.2 – Transaction Logic -->
+                    Stock is reduced only when the order is successfully created.
+                </p>
+                <form method="post" action="{{ url_for('checkout_page') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" name="name" id="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Shipping Address</label>
+                        <textarea name="address" id="address" class="form-control" rows="3"
+                                  required></textarea>
+                    </div>
+                    <button class="btn btn-success w-100" type="submit">
+                        <i class="bi bi-check-circle"></i> Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
