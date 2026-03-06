@@ -22,7 +22,7 @@ from flask import (
 import database as db
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "electro-swap-secret-key-change-me")
+app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(32)
 app.config["SESSION_TYPE"] = "filesystem"
 
 
@@ -271,4 +271,4 @@ def seed():
 
 if __name__ == "__main__":
     db.create_indexes()
-    app.run(debug=True, port=5000)
+    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true", port=5000)

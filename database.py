@@ -4,7 +4,7 @@ database.py – MongoDB logic for the Electro Swap hardware shop.
 Collections: Users, Products, Baskets, Orders, Reviews
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from bson import ObjectId
 from pymongo import MongoClient
@@ -53,7 +53,7 @@ def register_user(username, email, password, street="", city="", zip_code=""):
         "password_hash": generate_password_hash(password),
         "address": {"street": street, "city": city, "zip": zip_code},
         "role": "customer",
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
     }
     result = users_col.insert_one(user)
     return result.inserted_id
@@ -207,7 +207,7 @@ def checkout(user_id):
         "items": order_items,
         "total": round(sum(i["price"] * i["quantity"] for i in order_items), 2),
         "status": "confirmed",
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
     }
     result = orders_col.insert_one(order)
 
@@ -252,7 +252,7 @@ def add_review(user_id, product_id, rating, comment):
         "product_id": ObjectId(product_id),
         "rating": int(rating),
         "comment": comment,
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
     }
     reviews_col.insert_one(review)
 
