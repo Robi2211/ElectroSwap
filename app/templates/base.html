@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ElectroSwap{% endblock %} – Premium Hardware Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
@@ -35,13 +36,13 @@
 </head>
 <body class="bg-brand-dark text-gray-200 min-h-screen flex flex-col" x-data="{ mobileMenu: false }">
 
-    <!-- ═══════════ NAVBAR ═══════════ -->
+    <!--  NAVBAR  -->
     <nav class="glass sticky top-0 z-50 border-b border-brand-border">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
                 <a href="{{ url_for('main.index') }}" class="flex items-center gap-2 group">
-                    <span class="text-2xl">⚡</span>
+                    <i class="fa-solid fa-bolt text-brand-yellow text-2xl"></i>
                     <span class="text-xl font-bold bg-gradient-to-r from-brand-yellow to-brand-blue bg-clip-text text-transparent group-hover:from-brand-blue group-hover:to-brand-yellow transition-all duration-500">ElectroSwap</span>
                 </a>
 
@@ -118,7 +119,7 @@
         </div>
     </nav>
 
-    <!-- ═══════════ FLASH MESSAGES ═══════════ -->
+    <!--  FLASH MESSAGES  -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="max-w-7xl mx-auto px-4 pt-4 space-y-2">
@@ -136,18 +137,18 @@
         {% endif %}
     {% endwith %}
 
-    <!-- ═══════════ MAIN CONTENT ═══════════ -->
+    <!--  MAIN CONTENT  -->
     <main class="flex-1">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ═══════════ FOOTER ═══════════ -->
+    <!--  FOOTER  -->
     <footer class="border-t border-brand-border mt-16">
         <div class="max-w-7xl mx-auto px-4 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-2xl">⚡</span>
+                        <i class="fa-solid fa-bolt text-brand-yellow text-2xl"></i>
                         <span class="text-lg font-bold bg-gradient-to-r from-brand-yellow to-brand-blue bg-clip-text text-transparent">ElectroSwap</span>
                     </div>
                     <p class="text-sm text-gray-500">Your one-stop hardware shop — CPUs, GPUs, Monitors and more.</p>

@@ -5,7 +5,7 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex flex-col lg:flex-row gap-8">
 
-        <!-- ═══════════ SIDEBAR FILTERS ═══════════ -->
+        <!--  SIDEBAR FILTERS  -->
         <aside class="w-full lg:w-64 flex-shrink-0" x-data="{ open: window.innerWidth >= 1024 }">
             <button @click="open = !open" class="lg:hidden w-full flex items-center justify-between glass rounded-xl px-4 py-3 mb-4 text-sm font-medium text-gray-300">
                 <span>Filters</span>
@@ -55,7 +55,7 @@
             </div>
         </aside>
 
-        <!-- ═══════════ PRODUCT GRID ═══════════ -->
+        <!--  PRODUCT GRID  -->
         <div class="flex-1">
             <!-- Header -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -132,7 +132,7 @@
 
             {% else %}
             <div class="text-center py-16">
-                <div class="text-4xl mb-4">🔍</div>
+                <div class="text-4xl mb-4"><i class="fa-solid fa-magnifying-glass text-gray-500"></i></div>
                 <h3 class="text-lg font-semibold text-gray-300 mb-2">No products found</h3>
                 <p class="text-sm text-gray-500">Try adjusting your filters or search query.</p>
             </div>

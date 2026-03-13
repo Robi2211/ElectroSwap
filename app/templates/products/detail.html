@@ -17,7 +17,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
 
-        <!-- ═══════════ IMAGE GALLERY ═══════════ -->
+        <!--  IMAGE GALLERY  -->
         <div x-data="{ active: 0 }">
             <div class="glass rounded-2xl overflow-hidden aspect-[4/3] mb-4">
                 {% for img in product.images %}
@@ -35,7 +35,7 @@
             {% endif %}
         </div>
 
-        <!-- ═══════════ PRODUCT INFO ═══════════ -->
+        <!--  PRODUCT INFO  -->
         <div>
             <div class="text-sm text-brand-blue font-medium mb-2">{{ product.category }} · {{ product.brand }}</div>
             <h1 class="text-3xl font-bold text-white mb-4">{{ product.name }}</h1>
@@ -90,7 +90,7 @@
             </div>
             {% endif %}
 
-            <!-- ═══════════ SPECS TABLE (Dynamic – LB2 4.3) ═══════════ -->
+            <!--  SPECS TABLE (Dynamic – LB2 4.3)  -->
             {% if product.specs %}
             <div class="glass rounded-xl overflow-hidden">
                 <div class="px-5 py-3 border-b border-brand-border">
@@ -101,7 +101,7 @@
                     <div class="flex justify-between px-5 py-3 text-sm">
                         <span class="text-gray-400 capitalize">{{ key.replace('_', ' ') }}</span>
                         <span class="text-white font-medium">
-                            {% if value is sameas true %}✓{% elif value is sameas false %}✗{% else %}{{ value }}{% endif %}
+                            {% if value is sameas true %}<i class="fa-solid fa-check text-green-400"></i>{% elif value is sameas false %}<i class="fa-solid fa-xmark text-red-400"></i>{% else %}{{ value }}{% endif %}
                         </span>
                     </div>
                     {% endfor %}
@@ -111,7 +111,7 @@
         </div>
     </div>
 
-    <!-- ═══════════ REVIEWS SECTION ═══════════ -->
+    <!--  REVIEWS SECTION  -->
     <section class="mb-16">
         <h2 class="text-xl font-bold text-white mb-6">Customer Reviews</h2>
 
@@ -125,7 +125,7 @@
                     <label class="block text-xs text-gray-400 mb-2">Rating</label>
                     <div class="flex gap-1">
                         {% for i in range(1, 6) %}
-                        <button type="button" @click="rating = {{ i }}" class="text-2xl transition-colors" :class="rating >= {{ i }} ? 'text-brand-yellow' : 'text-gray-600'">★</button>
+                        <button type="button" @click="rating = {{ i }}" class="text-2xl transition-colors" :class="rating >= {{ i }} ? 'text-brand-yellow' : 'text-gray-600'"><i class="fa-solid fa-star"></i></button>
                         {% endfor %}
                     </div>
                     <input type="hidden" name="rating" :value="rating">
@@ -172,7 +172,7 @@
         {% endif %}
     </section>
 
-    <!-- ═══════════ RELATED PRODUCTS ═══════════ -->
+    <!--  RELATED PRODUCTS  -->
     {% if related %}
     <section>
         <h2 class="text-xl font-bold text-white mb-6">Related Products</h2>

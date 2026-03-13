@@ -5,15 +5,38 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-white">Products</h1>
+            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-boxes-stacked text-brand-yellow"></i> Products
+            </h1>
             <p class="text-sm text-gray-500 mt-1">{{ products|length }} product{{ 's' if products|length != 1 }}</p>
         </div>
-        <a href="{{ url_for('admin.product_create') }}" class="px-5 py-2.5 bg-brand-yellow text-brand-dark font-bold rounded-lg hover:bg-yellow-300 transition-colors text-sm">+ New Product</a>
+        <a href="{{ url_for('admin.product_create') }}" class="px-5 py-2.5 bg-brand-yellow text-brand-dark font-bold rounded-lg hover:bg-yellow-300 transition-colors text-sm flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> New Product
+        </a>
+    </div>
+
+    <!-- Search and filter bar -->
+    <div class="glass rounded-xl p-4 mb-6" x-data="{ search: '', category: '' }">
+        <div class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                <input type="text" x-model="search" placeholder="Search products by name or brand..."
+                       class="w-full pl-9 pr-4 py-2.5 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors"
+                       @input="filterProducts()">
+            </div>
+            <select x-model="category" @change="filterProducts()"
+                    class="px-4 py-2.5 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
 
     {% if products %}
     <div class="glass rounded-xl overflow-hidden overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-sm" id="productsTable">
             <thead class="border-b border-brand-border">
                 <tr class="text-xs text-gray-400 uppercase tracking-wider">
                     <th class="px-5 py-3 text-left">Product</th>
@@ -26,11 +49,12 @@
             </thead>
             <tbody class="divide-y divide-brand-border">
                 {% for p in products %}
-                <tr class="hover:bg-white/5 transition-colors">
+                <tr class="hover:bg-white/5 transition-colors product-row"
+                    data-name="{{ p.name|lower }}" data-brand="{{ p.brand|lower }}" data-category="{{ p.category }}">
                     <td class="px-5 py-3">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-lg bg-brand-surface overflow-hidden flex-shrink-0">
-                                <img src="{{ p.images[0] if p.images else 'https://placehold.co/80x80/1a1a2e/facc15?text=P' }}" alt="" class="w-full h-full object-cover">
+                                <img src="{{ p.images[0] if p.images else '/static/images/products/placeholder.jpg' }}" alt="" class="w-full h-full object-cover">
                             </div>
                             <span class="text-white font-medium">{{ p.name }}</span>
                         </div>
@@ -41,10 +65,14 @@
                     <td class="px-5 py-3 text-right {% if p.stock_quantity > 0 %}text-green-400{% else %}text-red-400{% endif %}">{{ p.stock_quantity }}</td>
                     <td class="px-5 py-3 text-right">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ url_for('admin.product_edit', product_id=p._id) }}" class="text-brand-blue hover:text-brand-yellow transition-colors text-xs font-medium">Edit</a>
+                            <a href="{{ url_for('admin.product_edit', product_id=p._id) }}" class="text-brand-blue hover:text-brand-yellow transition-colors text-xs font-medium flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </a>
                             <form method="POST" action="{{ url_for('admin.product_delete', product_id=p._id) }}" onsubmit="return confirm('Delete this product?');">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="text-red-400 hover:text-red-300 transition-colors text-xs font-medium">Delete</button>
+                                <button type="submit" class="text-red-400 hover:text-red-300 transition-colors text-xs font-medium flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
                             </form>
                         </div>
                     </td>
@@ -57,4 +85,20 @@
     <p class="text-sm text-gray-500">No products. Click "New Product" to add one.</p>
     {% endif %}
 </div>
+
+<script>
+/* Client-side search and category filter for the product table */
+function filterProducts() {
+    const search = (document.querySelector('[x-model="search"]')?.value || '').toLowerCase();
+    const category = document.querySelector('[x-model="category"]')?.value || '';
+    document.querySelectorAll('.product-row').forEach(function(row) {
+        const name = row.dataset.name || '';
+        const brand = row.dataset.brand || '';
+        const cat = row.dataset.category || '';
+        const matchesSearch = name.includes(search) || brand.includes(search);
+        const matchesCategory = !category || cat === category;
+        row.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
+    });
+}
+</script>
 {% endblock %}

@@ -1,4 +1,4 @@
-"""Admin blueprint – product CRUD and stock management (role-protected)."""
+"""Admin blueprint -- product CRUD, category and order management (role-protected)."""
 
 from datetime import datetime, timezone
 from functools import wraps
@@ -9,6 +9,12 @@ from bson import ObjectId
 from app import db
 
 admin_bp = Blueprint("admin", __name__, template_folder="../templates/admin")
+
+# All available product categories
+CATEGORIES = [
+    "CPU", "GPU", "Monitor", "Motherboard", "PSU",
+    "RAM", "Case", "Storage", "Cooling", "Peripherals",
+]
 
 
 def admin_required(f):
@@ -40,9 +46,13 @@ def dashboard():
 @admin_bp.route("/products")
 @admin_required
 def product_list():
-    """List all products for admin management."""
+    """List all products for admin management with search/filter support."""
     products = list(db.products.find().sort("name", 1))
-    return render_template("admin_products.html", products=products)
+    return render_template(
+        "admin_products.html",
+        products=products,
+        categories=CATEGORIES,
+    )
 
 
 @admin_bp.route("/products/create", methods=["GET", "POST"])
@@ -55,8 +65,7 @@ def product_create():
         flash("Product created.", "success")
         return redirect(url_for("admin.product_list"))
 
-    categories = ["CPU", "GPU", "Monitor", "Motherboard", "PSU", "RAM", "Case", "Storage"]
-    return render_template("admin_product_form.html", product=None, categories=categories)
+    return render_template("admin_product_form.html", product=None, categories=CATEGORIES)
 
 
 @admin_bp.route("/products/edit/<product_id>", methods=["GET", "POST"])
@@ -74,8 +83,7 @@ def product_edit(product_id):
         flash("Product updated.", "success")
         return redirect(url_for("admin.product_list"))
 
-    categories = ["CPU", "GPU", "Monitor", "Motherboard", "PSU", "RAM", "Case", "Storage"]
-    return render_template("admin_product_form.html", product=product, categories=categories)
+    return render_template("admin_product_form.html", product=product, categories=CATEGORIES)
 
 
 @admin_bp.route("/products/delete/<product_id>", methods=["POST"])
@@ -90,15 +98,25 @@ def product_delete(product_id):
 @admin_bp.route("/orders")
 @admin_required
 def order_list():
-    """List all orders."""
+    """List all orders with customer information."""
     orders = list(db.orders.find().sort("order_date", -1))
+    # Attach user info to each order for display in admin
+    for order in orders:
+        user = db.users.find_one({"_id": order.get("user_id")})
+        if user:
+            order["user_info"] = {
+                "username": user.get("username", "Unknown"),
+                "email": user.get("email", ""),
+            }
+        else:
+            order["user_info"] = None
     return render_template("admin_orders.html", orders=orders)
 
 
 @admin_bp.route("/orders/<order_id>/status", methods=["POST"])
 @admin_required
 def update_order_status(order_id):
-    """Update an order's status."""
+    """Update an order's status (Confirmed -> Shipped -> Delivered)."""
     new_status = request.form.get("status", "confirmed")
     db.orders.update_one({"_id": ObjectId(order_id)}, {"$set": {"status": new_status}})
     flash("Order status updated.", "success")
@@ -127,7 +145,7 @@ def _extract_product_form(req):
 
     images = [u.strip() for u in req.form.get("images", "").split(",") if u.strip()]
     if not images:
-        images = ["https://placehold.co/600x400/1a1a2e/e0e0e0?text=Product"]
+        images = ["/static/images/products/placeholder.jpg"]
 
     return {
         "name": req.form.get("name", "").strip(),
