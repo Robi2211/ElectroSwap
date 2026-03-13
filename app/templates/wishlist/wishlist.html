@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Wishlist{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="text-2xl font-bold text-white mb-8">My Wishlist</h1>
+
+    {% if items %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in items %}
+        <div class="glass rounded-xl overflow-hidden card-hover group">
+            <a href="{{ url_for('products.detail', product_id=item.product._id) }}">
+                <div class="aspect-[4/3] bg-brand-surface overflow-hidden">
+                    <img src="{{ item.product.images[0] if item.product.images else 'https://placehold.co/600x400/1a1a2e/facc15?text=Product' }}" alt="{{ item.product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+            </a>
+            <div class="p-4">
+                <div class="text-xs text-brand-blue font-medium mb-1">{{ item.product.brand }}</div>
+                <a href="{{ url_for('products.detail', product_id=item.product._id) }}" class="text-sm font-semibold text-white group-hover:text-brand-yellow transition-colors line-clamp-2 block mb-3">{{ item.product.name }}</a>
+                <div class="text-lg font-bold text-brand-yellow mb-4">CHF {{ "%.2f"|format(item.product.price) }}</div>
+                <div class="flex gap-2">
+                    <form method="POST" action="{{ url_for('wishlist.move_to_cart', product_id=item.product._id) }}" class="flex-1">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="w-full py-2 bg-brand-yellow text-brand-dark font-semibold rounded-lg hover:bg-yellow-300 transition-colors text-xs">Move to Cart</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('wishlist.remove', product_id=item.product._id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="py-2 px-3 border border-brand-border rounded-lg text-gray-400 hover:text-red-400 hover:border-red-400 transition-colors text-xs" title="Remove">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 glass rounded-2xl">
+        <div class="text-4xl mb-4"><i class="fa-solid fa-heart text-brand-yellow"></i></div>
+        <h3 class="text-lg font-semibold text-gray-300 mb-2">Your wishlist is empty</h3>
+        <p class="text-sm text-gray-500 mb-6">Save products you love for later.</p>
+        <a href="{{ url_for('products.catalog') }}" class="px-6 py-2.5 bg-brand-yellow text-brand-dark font-bold rounded-lg hover:bg-yellow-300 transition-colors text-sm">Browse Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

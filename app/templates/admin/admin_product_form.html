@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}{% if product %}Edit{% else %}New{% endif %} Product{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <a href="{{ url_for('admin.product_list') }}" class="text-sm text-brand-blue hover:text-brand-yellow transition-colors mb-6 inline-flex items-center gap-1">
+        <i class="fa-solid fa-arrow-left text-xs"></i> Back to Products
+    </a>
+    <h1 class="text-2xl font-bold text-white mb-8 flex items-center gap-2">
+        <i class="fa-solid {% if product %}fa-pen-to-square{% else %}fa-plus{% endif %} text-brand-yellow"></i>
+        {% if product %}Edit Product{% else %}New Product{% endif %}
+    </h1>
+
+    <form method="POST" class="glass rounded-2xl p-6 space-y-5" x-data="specManager()" >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="md:col-span-2">
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">Product Name</label>
+                <input type="text" name="name" value="{{ product.name if product else '' }}" required
+                       class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">Brand</label>
+                <input type="text" name="brand" value="{{ product.brand if product else '' }}" required
+                       class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">Category</label>
+                <select name="category" required class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if product and product.category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">Price (CHF)</label>
+                <input type="number" name="price" value="{{ product.price if product else '' }}" required min="0" step="0.01"
+                       class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1.5">Stock Quantity</label>
+                <input type="number" name="stock_quantity" value="{{ product.stock_quantity if product else 0 }}" required min="0"
+                       class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">Image URLs (comma-separated)</label>
+            <input type="text" name="images" value="{{ product.images|join(', ') if product and product.images else '' }}"
+                   class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors" placeholder="/static/images/products/my-product.jpg">
+            <p class="text-xs text-gray-500 mt-1">Use local paths like /static/images/products/filename.jpg or external URLs</p>
+        </div>
+
+        <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">Description</label>
+            <textarea name="description" rows="3" class="w-full px-4 py-3 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors resize-none">{{ product.description if product else '' }}</textarea>
+        </div>
+
+        <!-- Dynamic Specs -->
+        <div>
+            <label class="block text-xs font-medium text-gray-400 mb-3">Specifications <span class="text-gray-600">(dynamic key-value pairs)</span></label>
+            <template x-for="(spec, index) in specs" :key="index">
+                <div class="flex gap-2 mb-2">
+                    <input type="text" name="spec_key" :value="spec.key" placeholder="Key (e.g. cores)" x-model="spec.key"
+                           class="flex-1 px-3 py-2 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                    <input type="text" name="spec_value" :value="spec.value" placeholder="Value (e.g. 16)" x-model="spec.value"
+                           class="flex-1 px-3 py-2 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                    <button type="button" @click="specs.splice(index, 1)" class="px-3 py-2 border border-red-500/30 text-red-400 rounded-lg hover:bg-red-500/10 transition-colors text-sm">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </template>
+            <button type="button" @click="specs.push({key:'', value:''})" class="text-xs text-brand-blue hover:text-brand-yellow transition-colors font-medium mt-1 flex items-center gap-1">
+                <i class="fa-solid fa-plus text-xs"></i> Add Specification
+            </button>
+        </div>
+
+        <div class="pt-2">
+            <button type="submit" class="px-8 py-3 bg-brand-yellow text-brand-dark font-bold rounded-lg hover:bg-yellow-300 transition-colors glow-yellow text-sm flex items-center gap-2">
+                <i class="fa-solid {% if product %}fa-floppy-disk{% else %}fa-plus{% endif %}"></i>
+                {% if product %}Update Product{% else %}Create Product{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+function specManager() {
+    return {
+        specs: [
+            {% if product and product.specs %}
+                {% for key, value in product.specs.items() %}
+                    { key: '{{ key }}', value: '{{ value }}' },
+                {% endfor %}
+            {% else %}
+                { key: '', value: '' },
+            {% endif %}
+        ]
+    };
+}
+</script>
+{% endblock %}

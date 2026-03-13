@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+
+        <!--  SIDEBAR FILTERS  -->
+        <aside class="w-full lg:w-64 flex-shrink-0" x-data="{ open: window.innerWidth >= 1024 }">
+            <button @click="open = !open" class="lg:hidden w-full flex items-center justify-between glass rounded-xl px-4 py-3 mb-4 text-sm font-medium text-gray-300">
+                <span>Filters</span>
+                <svg class="w-4 h-4 transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="open" x-transition class="glass rounded-xl p-5 space-y-6">
+                <!-- Search -->
+                <form method="GET" action="{{ url_for('products.catalog') }}">
+                    <label class="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">Search</label>
+                    <input type="text" name="q" value="{{ search }}" placeholder="Search products..."
+                           class="w-full px-3 py-2 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+
+                    <!-- Category -->
+                    <label class="block text-xs font-semibold text-gray-400 mb-2 mt-5 uppercase tracking-wider">Category</label>
+                    <div class="space-y-1.5">
+                        <a href="{{ url_for('products.catalog', q=search, brand=current_brand, min_price=min_price, max_price=max_price, sort=sort_by) }}"
+                           class="block px-3 py-1.5 rounded-lg text-sm transition-colors {% if not current_category %}bg-brand-yellow/10 text-brand-yellow{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %}">All</a>
+                        {% for cat in categories %}
+                        <a href="{{ url_for('products.catalog', category=cat, q=search, brand=current_brand, min_price=min_price, max_price=max_price, sort=sort_by) }}"
+                           class="block px-3 py-1.5 rounded-lg text-sm transition-colors {% if current_category == cat %}bg-brand-yellow/10 text-brand-yellow{% else %}text-gray-400 hover:text-white hover:bg-white/5{% endif %}">{{ cat }}</a>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Brand -->
+                    <label class="block text-xs font-semibold text-gray-400 mb-2 mt-5 uppercase tracking-wider">Brand</label>
+                    <select name="brand" onchange="this.form.submit()"
+                            class="w-full px-3 py-2 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                        <option value="">All Brands</option>
+                        {% for b in brands %}
+                        <option value="{{ b }}" {% if current_brand == b %}selected{% endif %}>{{ b }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Price Range -->
+                    <label class="block text-xs font-semibold text-gray-400 mb-2 mt-5 uppercase tracking-wider">Price Range (CHF)</label>
+                    <div class="flex gap-2">
+                        <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min" min="0" step="1"
+                               class="w-1/2 px-3 py-2 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                        <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max" min="0" step="1"
+                               class="w-1/2 px-3 py-2 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                    </div>
+
+                    {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+                    <input type="hidden" name="sort" value="{{ sort_by }}">
+                    <button type="submit" class="w-full mt-4 py-2 bg-brand-blue text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors text-sm">Apply Filters</button>
+                </form>
+            </div>
+        </aside>
+
+        <!--  PRODUCT GRID  -->
+        <div class="flex-1">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-white">
+                        {% if current_category %}{{ current_category }}{% elif search %}Results for "{{ search }}"{% else %}All Products{% endif %}
+                    </h1>
+                    <p class="text-sm text-gray-500 mt-1">{{ total }} product{{ 's' if total != 1 }} found</p>
+                </div>
+                <div>
+                    <form method="GET" action="{{ url_for('products.catalog') }}" class="flex items-center gap-2">
+                        {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+                        {% if current_brand %}<input type="hidden" name="brand" value="{{ current_brand }}">{% endif %}
+                        {% if search %}<input type="hidden" name="q" value="{{ search }}">{% endif %}
+                        {% if min_price %}<input type="hidden" name="min_price" value="{{ min_price }}">{% endif %}
+                        {% if max_price %}<input type="hidden" name="max_price" value="{{ max_price }}">{% endif %}
+                        <label class="text-xs text-gray-500">Sort:</label>
+                        <select name="sort" onchange="this.form.submit()"
+                                class="px-3 py-1.5 bg-brand-dark border border-brand-border rounded-lg text-white text-sm focus:border-brand-yellow focus:outline-none transition-colors">
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
+                            <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low → High</option>
+                            <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High → Low</option>
+                            <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name: A → Z</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            {% if products %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {% for product in products %}
+                <a href="{{ url_for('products.detail', product_id=product._id) }}" class="glass rounded-xl overflow-hidden card-hover group">
+                    <div class="aspect-[4/3] bg-brand-surface flex items-center justify-center overflow-hidden">
+                        <img src="{{ product.images[0] if product.images else 'https://placehold.co/600x400/1a1a2e/facc15?text=Product' }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    </div>
+                    <div class="p-4">
+                        <div class="text-xs text-brand-blue font-medium mb-1">{{ product.category }} · {{ product.brand }}</div>
+                        <h3 class="text-sm font-semibold text-white group-hover:text-brand-yellow transition-colors line-clamp-2 mb-3">{{ product.name }}</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-bold text-brand-yellow">CHF {{ "%.2f"|format(product.price) }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full {% if product.stock_quantity > 0 %}bg-green-500/10 text-green-400{% else %}bg-red-500/10 text-red-400{% endif %}">
+                                {% if product.stock_quantity > 0 %}In Stock{% else %}Sold Out{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if total_pages > 1 %}
+            <div class="flex justify-center gap-2 mt-10">
+                {% if page > 1 %}
+                <a href="{{ url_for('products.catalog', page=page-1, category=current_category, brand=current_brand, q=search, min_price=min_price, max_price=max_price, sort=sort_by) }}"
+                   class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-brand-yellow transition-colors">← Prev</a>
+                {% endif %}
+                {% for p in range(1, total_pages + 1) %}
+                    {% if p == page %}
+                        <span class="px-4 py-2 bg-brand-yellow text-brand-dark font-bold rounded-lg text-sm">{{ p }}</span>
+                    {% elif p <= 3 or p > total_pages - 3 or (p >= page - 1 and p <= page + 1) %}
+                        <a href="{{ url_for('products.catalog', page=p, category=current_category, brand=current_brand, q=search, min_price=min_price, max_price=max_price, sort=sort_by) }}"
+                           class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-brand-yellow transition-colors">{{ p }}</a>
+                    {% elif p == 4 or p == total_pages - 3 %}
+                        <span class="px-2 py-2 text-gray-500 text-sm">…</span>
+                    {% endif %}
+                {% endfor %}
+                {% if page < total_pages %}
+                <a href="{{ url_for('products.catalog', page=page+1, category=current_category, brand=current_brand, q=search, min_price=min_price, max_price=max_price, sort=sort_by) }}"
+                   class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-brand-yellow transition-colors">Next →</a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-16">
+                <div class="text-4xl mb-4"><i class="fa-solid fa-magnifying-glass text-gray-500"></i></div>
+                <h3 class="text-lg font-semibold text-gray-300 mb-2">No products found</h3>
+                <p class="text-sm text-gray-500">Try adjusting your filters or search query.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
