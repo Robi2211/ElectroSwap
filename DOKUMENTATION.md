@@ -272,7 +272,7 @@ Die Umsetzung des konzeptionellen Datenmodells in MongoDB erfolgt durch sechs Co
   "_id": ObjectId("507f191e810c19729de860ee"),
   "user_id": ObjectId("507f1f77bcf86cd799439011"),
   "order_date": ISODate("2024-01-20T16:00:00Z"),
-  "total_price": 2897.00,
+  "total_price": 2348.00,
   "status": "confirmed",
   "shipping_address": {
     "street": "Hauptstrasse 10",
@@ -358,7 +358,7 @@ Für optimale Performance werden folgende Indizes verwendet:
 - **products**: Text-Index auf `name` und `description`, Index auf `category`, `brand`, `price`
 - **baskets**: Index auf `user_id`
 - **wishlists**: Index auf `user_id`
-- **orders**: Index auf `user_id`, `created_at`
+- **orders**: Index auf `user_id`, `order_date`
 - **reviews**: Index auf `product_id`, zusammengesetzter Index auf `user_id` + `product_id`
 
 ## 4. Technische Implementierung
