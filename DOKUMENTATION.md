@@ -8,7 +8,7 @@
 
 #### Kernfunktionalitäten:
 
-1. **Produktkatalog** mit 22 realistischen Hardware-Artikeln aus 9 Kategorien (CPU, GPU, SSD, Monitor, RAM, Motherboard, PSU, Case, Cooler, Peripheral)
+1. **Produktkatalog** mit 22 realistischen Hardware-Artikeln aus 10 Kategorien (CPU, GPU, SSD, Monitor, RAM, Motherboard, PSU, Case, Cooler, Peripheral)
 2. **Benutzerauthentifizierung** mit sicherer Passwort-Hashing (Werkzeug)
 3. **Warenkorb-System** mit Add/Update/Remove-Funktionen
 4. **Checkout mit Transaktionslogik** (Lagerbestandsprüfung → Bestellung → Lagerreduzierung → Warenkorb leeren)
