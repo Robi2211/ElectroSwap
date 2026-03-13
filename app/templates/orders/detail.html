@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Order Detail – ElectroSwap{% endblock %}
+{% block content %}
+<h1>Order {{ order_id }}</h1>
+{% if order %}
+<p>{{ order }}</p>
+{% else %}
+<div class="alert alert-warning">Order not found.</div>
+{% endif %}
+{% endblock %}

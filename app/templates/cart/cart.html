@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Cart – ElectroSwap{% endblock %}
+{% block content %}
+<h1 class="mb-4">Your Cart</h1>
+{% if cart %}
+<ul class="list-group">
+    {% for item_id in cart %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Product ID: {{ item_id }}
+        <form action="{{ url_for('cart.remove_from_cart', product_id=item_id) }}" method="post" class="mb-0">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-info">Your cart is empty. <a href="{{ url_for('products.list_products') }}">Shop now!</a></div>
+{% endif %}
+{% endblock %}

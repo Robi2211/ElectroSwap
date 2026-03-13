@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Reviews – ElectroSwap{% endblock %}
+{% block content %}
+<h1 class="mb-4">Reviews</h1>
+{% if reviews %}
+<ul class="list-group">{% for r in reviews %}<li class="list-group-item">{{ r }}</li>{% endfor %}</ul>
+{% else %}
+<div class="alert alert-info">No reviews yet.</div>
+{% endif %}
+{% endblock %}

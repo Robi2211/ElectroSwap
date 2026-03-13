@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Products – ElectroSwap{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1>Products</h1>
+    <a href="{{ url_for('products.add_product_form') }}" class="btn btn-warning">
+        <i class="bi bi-plus-circle"></i> Add Product
+    </a>
+</div>
+
+<!-- Category filter -->
+<div class="mb-4 d-flex flex-wrap gap-2">
+    <a href="{{ url_for('products.list_products') }}"
+       class="btn btn-sm {% if not selected_category %}btn-dark{% else %}btn-outline-dark{% endif %}">All</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('products.list_products', category=cat) }}"
+       class="btn btn-sm {% if selected_category == cat %}btn-dark{% else %}btn-outline-dark{% endif %}">{{ cat }}</a>
+    {% endfor %}
+</div>
+
+{% if products %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>SKU</th>
+                <th>Price (€)</th>
+                <th>Condition</th>
+                <th>Stock</th>
+                <th>Weight (kg)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr>
+                <td style="width:60px">
+                    <img src="{{ p.image_url }}" alt="{{ p.name }}" width="50" height="50"
+                         style="object-fit:contain"
+                         onerror="this.src='https://via.placeholder.com/50?text=?'">
+                </td>
+                <td>
+                    <a href="{{ url_for('products.product_detail', product_id=p._id) }}" class="fw-bold text-decoration-none">
+                        {{ p.name }}
+                    </a>
+                    <div class="text-muted small">{{ p.description[:60] }}{% if p.description|length > 60 %}…{% endif %}</div>
+                </td>
+                <td>{{ p.brand }}</td>
+                <td><span class="badge bg-secondary">{{ p.category }}</span></td>
+                <td><code>{{ p.sku }}</code></td>
+                <td class="text-success fw-bold">{{ "%.2f"|format(p.price) }}</td>
+                <td>
+                    <span class="badge {% if p.condition == 'new' %}bg-success{% else %}bg-purple text-white{% endif %}"
+                          style="{% if p.condition == 'used' %}background-color:#6f42c1{% endif %}">
+                        {{ p.condition }}
+                    </span>
+                </td>
+                <td>{{ p.stock_quantity }}</td>
+                <td>{{ p.weight }}</td>
+                <td>
+                    <a href="{{ url_for('products.product_detail', product_id=p._id) }}"
+                       class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    No products found. <a href="{{ url_for('products.add_product_form') }}">Add one now!</a>
+</div>
+{% endif %}
+{% endblock %}

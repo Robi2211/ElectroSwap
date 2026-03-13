@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Orders – ElectroSwap{% endblock %}
+{% block content %}
+<h1 class="mb-4">Your Orders</h1>
+{% if orders %}
+<ul class="list-group">{% for o in orders %}<li class="list-group-item">{{ o }}</li>{% endfor %}</ul>
+{% else %}
+<div class="alert alert-info">No orders yet.</div>
+{% endif %}
+{% endblock %}

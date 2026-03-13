@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} – ElectroSwap{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('products.list_products') }}">Products</a></li>
+        <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <!-- Image -->
+    <div class="col-md-5">
+        <div class="card shadow-sm p-3 text-center">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}"
+                 class="img-fluid" style="max-height:350px;object-fit:contain;"
+                 onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+        </div>
+    </div>
+
+    <!-- Details -->
+    <div class="col-md-7">
+        <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+        <h1 class="h2">{{ product.name }}</h1>
+        <p class="text-muted fs-5">{{ product.brand }}</p>
+        <p>{{ product.description }}</p>
+
+        <div class="fs-2 fw-bold text-success mb-3">€{{ "%.2f"|format(product.price) }}</div>
+
+        <table class="table table-bordered table-sm mb-4">
+            <tbody>
+                <tr><th>SKU</th><td><code>{{ product.sku }}</code></td></tr>
+                <tr><th>Condition</th>
+                    <td>
+                        <span class="badge {% if product.condition == 'new' %}bg-success{% else %}bg-purple{% endif %}"
+                              style="{% if product.condition == 'used' %}background-color:#6f42c1{% endif %}">
+                            {{ product.condition }}
+                        </span>
+                    </td>
+                </tr>
+                <tr><th>Stock</th>
+                    <td>
+                        {% if product.stock_quantity > 0 %}
+                            <span class="text-success fw-bold">{{ product.stock_quantity }} in stock</span>
+                        {% else %}
+                            <span class="text-danger fw-bold">Out of stock</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr><th>Weight</th><td>{{ product.weight }} kg</td></tr>
+                <tr><th>Added</th><td>{{ product.created_at }}</td></tr>
+                <tr><th>Last Updated</th><td>{{ product.updated_at }}</td></tr>
+            </tbody>
+        </table>
+
+        <form action="{{ url_for('cart.add_to_cart', product_id=product._id) }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-warning btn-lg me-2">
+                <i class="bi bi-cart-plus"></i> Add to Cart
+            </button>
+        </form>
+        <form action="{{ url_for('wishlist.add_to_wishlist', product_id=product._id) }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger btn-lg">
+                <i class="bi bi-heart"></i> Wishlist
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

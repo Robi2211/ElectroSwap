@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard – ElectroSwap{% endblock %}
+{% block content %}
+<h1 class="mb-4">Admin Dashboard</h1>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h2 class="display-4 fw-bold text-warning">{{ product_count }}</h2>
+                <p class="mb-0">Total Products</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4">
+    <a href="{{ url_for('products.add_product_form') }}" class="btn btn-warning">
+        <i class="bi bi-plus-circle"></i> Add Product
+    </a>
+    <a href="{{ url_for('products.list_products') }}" class="btn btn-outline-dark ms-2">
+        View All Products
+    </a>
+</div>
+{% endblock %}
