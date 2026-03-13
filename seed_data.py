@@ -22,25 +22,46 @@ def seed():
 
     # ── Admin user ──────────────────────────────────────
     admin_pw = bcrypt.hashpw(b"admin123", bcrypt.gensalt()).decode()
-    db.users.insert_one({
+    admin_id = db.users.insert_one({
         "username": "admin",
         "email": "admin@electroswap.ch",
         "password_hash": admin_pw,
         "role": "admin",
         "address": {"street": "Bahnhofstr. 1", "city": "Zurich", "zip_code": "8001", "country": "Switzerland"},
         "created_at": now,
-    })
+    }).inserted_id
 
     # ── Demo customer ────────────────────────────────────
     cust_pw = bcrypt.hashpw(b"customer123", bcrypt.gensalt()).decode()
-    db.users.insert_one({
+    customer_id = db.users.insert_one({
         "username": "demo_customer",
         "email": "customer@electroswap.ch",
         "password_hash": cust_pw,
         "role": "customer",
         "address": {"street": "Hauptstr. 10", "city": "Bern", "zip_code": "3011", "country": "Switzerland"},
         "created_at": now,
-    })
+    }).inserted_id
+
+    # ── Additional demo users (realistic Live-Demo) ──────
+    demo_users = [
+        ("luca", "luca@electroswap.ch", "Zurich"),
+        ("mia", "mia@electroswap.ch", "Basel"),
+        ("noah", "noah@electroswap.ch", "Geneva"),
+        ("sara", "sara@electroswap.ch", "Lausanne"),
+    ]
+    demo_user_ids = []
+    for username, email, city in demo_users:
+        pw = bcrypt.hashpw(b"customer123", bcrypt.gensalt()).decode()
+        demo_user_ids.append(
+            db.users.insert_one({
+                "username": username,
+                "email": email,
+                "password_hash": pw,
+                "role": "customer",
+                "address": {"street": "Demo Street 1", "city": city, "zip_code": "8000", "country": "Switzerland"},
+                "created_at": now,
+            }).inserted_id
+        )
 
     # ── Products ────────────────────────────────────────
     products = [
@@ -230,10 +251,101 @@ def seed():
         },
     ]
 
-    db.products.insert_many(products)
+    # Add more products to ensure >= 20 (criterion 2.9)
+    extra_products = [
+        {
+            "name": "Noctua NH-D15 chromax.black",
+            "brand": "Noctua",
+            "price": 109.00,
+            "category": "Cooling",
+            "stock_quantity": 28,
+            "images": [IMG + "Noctua+NH-D15"],
+            "description": "Premium dual-tower CPU cooler with excellent thermals and low noise.",
+            "specs": {"type": "Air Cooler", "height": "165 mm", "fans": 2, "socket_support": "AM4/AM5/LGA1700"},
+            "created_at": now,
+        },
+        {
+            "name": "Corsair iCUE H150i ELITE CAPELLIX XT",
+            "brand": "Corsair",
+            "price": 179.00,
+            "category": "Cooling",
+            "stock_quantity": 16,
+            "images": [IMG + "Corsair+H150i"],
+            "description": "360mm AIO liquid cooler with high-performance RGB pump and fans.",
+            "specs": {"type": "AIO", "radiator": "360 mm", "fans": 3, "rgb": True},
+            "created_at": now,
+        },
+        {
+            "name": "Logitech G Pro X Superlight 2",
+            "brand": "Logitech",
+            "price": 139.00,
+            "category": "Peripherals",
+            "stock_quantity": 60,
+            "images": [IMG + "GPX+Superlight+2"],
+            "description": "Ultra-light wireless esports mouse with HERO sensor and long battery life.",
+            "specs": {"weight": "~60g", "connection": "Wireless", "sensor": "HERO", "dpi": "Up to 32k"},
+            "created_at": now,
+        },
+        {
+            "name": "Keychron Q1 Pro",
+            "brand": "Keychron",
+            "price": 199.00,
+            "category": "Peripherals",
+            "stock_quantity": 22,
+            "images": [IMG + "Keychron+Q1+Pro"],
+            "description": "Premium QMK/VIA mechanical keyboard with wireless support and aluminum body.",
+            "specs": {"layout": "75%", "connection": "Wireless/USB-C", "switches": "Hot-swappable", "case": "Aluminum"},
+            "created_at": now,
+        },
+        {
+            "name": "ASUS ROG Strix XG27AQ",
+            "brand": "ASUS",
+            "price": 449.00,
+            "category": "Monitor",
+            "stock_quantity": 19,
+            "images": [IMG + "ROG+XG27AQ"],
+            "description": "27-inch 1440p IPS monitor with 170 Hz refresh rate for smooth gaming.",
+            "specs": {"panel": "IPS", "resolution": "2560x1440", "refresh_rate": "170 Hz", "response_time": "1 ms"},
+            "created_at": now,
+        },
+    ]
+
+    products.extend(extra_products)
+
+    inserted_ids = db.products.insert_many(products).inserted_ids
     print(f"✓ Seeded {len(products)} products")
+
+    # ── Seed realistic reviews (>= 20) ───────────────────
+    # Attach reviews to some products for Live-Demo.
+    review_texts = [
+        (5, "Excellent build quality and performance. Exactly as described."),
+        (4, "Great value. Shipping was fast and packaging was solid."),
+        (5, "Perfect for my new build. Temps and stability are great."),
+        (3, "Works fine, but I expected slightly better acoustics."),
+        (4, "Good product overall. Would buy again."),
+    ]
+
+    review_docs = []
+    # create 20 reviews across first 10 products
+    for i in range(20):
+        product_id = inserted_ids[i % min(10, len(inserted_ids))]
+        user_id = demo_user_ids[i % len(demo_user_ids)] if demo_user_ids else customer_id
+        rating, comment = review_texts[i % len(review_texts)]
+        review_docs.append({
+            "product_id": product_id,
+            "user_id": user_id,
+            "rating": rating,
+            "comment": comment,
+            "created_at": now,
+        })
+
+    if review_docs:
+        db.reviews.insert_many(review_docs)
+        print(f"✓ Seeded {len(review_docs)} reviews")
+
     print("✓ Created admin user  → admin@electroswap.ch / admin123")
     print("✓ Created demo customer → customer@electroswap.ch / customer123")
+    print("✓ Created extra demo users → (all with password) customer123")
 
 
 if __name__ == "__main__":

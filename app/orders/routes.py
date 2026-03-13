@@ -7,6 +7,11 @@ from bson import ObjectId
 
 from app import db, mongo_client
 
+# NEW: basic server-side logging of checkout errors
+import logging
+
+logger = logging.getLogger(__name__)
+
 orders_bp = Blueprint("orders", __name__, template_folder="../templates/orders")
 
 
@@ -45,7 +50,10 @@ def checkout():
     4. Clear the basket
     All steps run inside a single transaction for atomicity.
     """
-    uid = current_user.get_id_object()
+    # IMPORTANT: always use the user ObjectId consistently
+    uid = ObjectId(current_user.get_id())
+
+    # Load basket (outside tx for GET render)
     basket = db.baskets.find_one({"user_id": uid})
 
     if not basket or not basket.get("items"):
@@ -85,17 +93,81 @@ def checkout():
     # --- MongoDB Transaction ---
     try:
         with mongo_client.start_session() as session:
-            with session.start_transaction():
-                # 1. Verify stock & build order items with snapshot data
+            try:
+                with session.start_transaction():
+                    # Re-load basket inside the transaction/session to ensure we use the same snapshot
+                    basket = db.baskets.find_one({"user_id": uid}, session=session)
+                    if not basket or not basket.get("items"):
+                        raise ValueError("Your cart is empty.")
+
+                    # 1. Verify stock & build order items with snapshot data
+                    order_items = []
+                    for entry in basket["items"]:
+                        product = db.products.find_one({"_id": entry["product_id"]}, session=session)
+                        if not product:
+                            raise ValueError("Product no longer exists.")
+                        if product.get("stock_quantity", 0) < entry.get("quantity", 0):
+                            raise ValueError(
+                                f"Not enough stock for {product.get('name','(unknown)')} "
+                                f"(available: {product.get('stock_quantity',0)}, requested: {entry.get('quantity',0)})."
+                            )
+                        order_items.append({
+                            "product_id": product["_id"],
+                            "name_at_purchase": product["name"],
+                            "price_at_purchase": product["price"],
+                            "quantity": entry["quantity"],
+                        })
+
+                    # 2. Reduce stock
+                    for item in order_items:
+                        db.products.update_one(
+                            {"_id": item["product_id"]},
+                            {"$inc": {"stock_quantity": -item["quantity"]}},
+                            session=session,
+                        )
+
+                    # 3. Create order (snapshot principle – LB2 5.2)
+                    order_doc = {
+                        "user_id": uid,
+                        "order_date": datetime.now(timezone.utc),
+                        "total_price": total,
+                        "status": "confirmed",
+                        "shipping_address": {
+                            "street": street,
+                            "city": city,
+                            "zip_code": zip_code,
+                            "country": country,
+                        },
+                        "order_items": order_items,
+                    }
+                    db.orders.insert_one(order_doc, session=session)
+
+                    # 4. Clear basket
+                    db.baskets.delete_one({"user_id": uid}, session=session)
+
+            except Exception as tx_err:
+                # Standalone MongoDB (no replica set) does not support transactions.
+                # Fallback to a best-effort non-transactional checkout so the app works locally.
+                if "Transaction numbers are only allowed" not in str(tx_err):
+                    raise
+
+                logger.warning("Transactions unsupported (standalone MongoDB). Falling back to non-transaction checkout.")
+
+                # Re-load basket without session
+                basket = db.baskets.find_one({"user_id": uid})
+                if not basket or not basket.get("items"):
+                    raise ValueError("Your cart is empty.")
+
+                # Verify stock & build order items
                 order_items = []
                 for entry in basket["items"]:
-                    product = db.products.find_one({"_id": entry["product_id"]}, session=session)
+                    product = db.products.find_one({"_id": entry["product_id"]})
                     if not product:
-                        raise ValueError(f"Product no longer exists.")
-                    if product["stock_quantity"] < entry["quantity"]:
+                        raise ValueError("Product no longer exists.")
+                    if product.get("stock_quantity", 0) < entry.get("quantity", 0):
                         raise ValueError(
-                            f"Not enough stock for {product['name']} "
-                            f"(available: {product['stock_quantity']}, requested: {entry['quantity']})."
+                            f"Not enough stock for {product.get('name','(unknown)')} "
+                            f"(available: {product.get('stock_quantity',0)}, requested: {entry.get('quantity',0)})."
                         )
                     order_items.append({
                         "product_id": product["_id"],
@@ -104,15 +176,13 @@ def checkout():
                         "quantity": entry["quantity"],
                     })
 
-                # 2. Reduce stock
+                # Reduce stock (non-atomic)
                 for item in order_items:
                     db.products.update_one(
                         {"_id": item["product_id"]},
                         {"$inc": {"stock_quantity": -item["quantity"]}},
-                        session=session,
                     )
 
-                # 3. Create order (snapshot principle – LB2 5.2)
                 order_doc = {
                     "user_id": uid,
                     "order_date": datetime.now(timezone.utc),
@@ -126,10 +196,8 @@ def checkout():
                     },
                     "order_items": order_items,
                 }
-                db.orders.insert_one(order_doc, session=session)
-
-                # 4. Clear basket
-                db.baskets.delete_one({"user_id": uid}, session=session)
+                db.orders.insert_one(order_doc)
+                db.baskets.delete_one({"user_id": uid})
 
         flash("Order placed successfully!", "success")
         return redirect(url_for("orders.history"))
@@ -137,6 +205,7 @@ def checkout():
     except ValueError as e:
         flash(str(e), "error")
         return redirect(url_for("cart.view"))
-    except Exception:
+    except Exception as e:
+        logger.exception("Checkout failed")
         flash("Something went wrong during checkout. Please try again.", "error")
         return redirect(url_for("cart.view"))
