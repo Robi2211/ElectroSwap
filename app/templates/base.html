@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ElectroSwap{% endblock %} – Premium Hardware Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { yellow: '#facc15', blue: '#3b82f6', dark: '#0f0f1a', card: '#1a1a2e', surface: '#16162a', border: '#2a2a4a' },
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .glass { background: rgba(26,26,46,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); }
+        .glow-yellow { box-shadow: 0 0 20px rgba(250,204,21,0.15); }
+        .glow-blue { box-shadow: 0 0 20px rgba(59,130,246,0.15); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(250,204,21,0.1); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f0f1a; }
+        ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-brand-dark text-gray-200 min-h-screen flex flex-col" x-data="{ mobileMenu: false }">
+
+    <!-- ═══════════ NAVBAR ═══════════ -->
+    <nav class="glass sticky top-0 z-50 border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="{{ url_for('main.index') }}" class="flex items-center gap-2 group">
+                    <span class="text-2xl">⚡</span>
+                    <span class="text-xl font-bold bg-gradient-to-r from-brand-yellow to-brand-blue bg-clip-text text-transparent group-hover:from-brand-blue group-hover:to-brand-yellow transition-all duration-500">ElectroSwap</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="{{ url_for('products.catalog') }}" class="text-gray-300 hover:text-brand-yellow transition-colors text-sm font-medium">Products</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('wishlist.view') }}" class="text-gray-300 hover:text-brand-yellow transition-colors text-sm font-medium">Wishlist</a>
+                        <a href="{{ url_for('orders.history') }}" class="text-gray-300 hover:text-brand-yellow transition-colors text-sm font-medium">Orders</a>
+                        {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="text-brand-blue hover:text-brand-yellow transition-colors text-sm font-medium">Admin</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Right side -->
+                <div class="flex items-center gap-4">
+                    <!-- Cart -->
+                    <a href="{{ url_for('cart.view') }}" class="relative group">
+                        <svg class="w-6 h-6 text-gray-300 group-hover:text-brand-yellow transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+                        </svg>
+                        {% if cart_count > 0 %}
+                            <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-dark text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+
+                    {% if current_user.is_authenticated %}
+                        <div class="hidden md:flex items-center gap-3" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center gap-2 text-sm text-gray-300 hover:text-brand-yellow transition-colors">
+                                <span class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-yellow to-brand-blue flex items-center justify-center text-brand-dark font-bold text-xs">{{ current_user.username[0]|upper }}</span>
+                                <span>{{ current_user.username }}</span>
+                            </button>
+                            <div x-show="open" @click.away="open = false" x-transition class="absolute right-4 top-14 glass rounded-xl py-2 w-48 shadow-xl">
+                                <a href="{{ url_for('auth.profile') }}" class="block px-4 py-2 text-sm hover:bg-white/5 transition-colors">Profile</a>
+                                <a href="{{ url_for('orders.history') }}" class="block px-4 py-2 text-sm hover:bg-white/5 transition-colors">My Orders</a>
+                                <hr class="border-brand-border my-1">
+                                <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-red-400 hover:bg-white/5 transition-colors">Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="hidden md:inline-flex text-sm text-gray-300 hover:text-brand-yellow transition-colors font-medium">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="hidden md:inline-flex px-4 py-2 bg-brand-yellow text-brand-dark text-sm font-semibold rounded-lg hover:bg-yellow-300 transition-colors">Sign Up</a>
+                    {% endif %}
+
+                    <!-- Mobile menu button -->
+                    <button @click="mobileMenu = !mobileMenu" class="md:hidden text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            <path x-show="mobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenu" x-transition class="md:hidden glass border-t border-brand-border">
+            <div class="px-4 py-3 space-y-2">
+                <a href="{{ url_for('products.catalog') }}" class="block py-2 text-gray-300 hover:text-brand-yellow">Products</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('wishlist.view') }}" class="block py-2 text-gray-300 hover:text-brand-yellow">Wishlist</a>
+                    <a href="{{ url_for('orders.history') }}" class="block py-2 text-gray-300 hover:text-brand-yellow">Orders</a>
+                    <a href="{{ url_for('auth.profile') }}" class="block py-2 text-gray-300 hover:text-brand-yellow">Profile</a>
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="block py-2 text-brand-blue hover:text-brand-yellow">Admin Panel</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}" class="block py-2 text-red-400">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="block py-2 text-gray-300 hover:text-brand-yellow">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="block py-2 text-brand-yellow font-semibold">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════ FLASH MESSAGES ═══════════ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 pt-4 space-y-2">
+                {% for category, message in messages %}
+                    <div x-data="{ show: true }" x-show="show" x-transition
+                         class="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium
+                         {% if category == 'error' %}bg-red-500/20 text-red-300 border border-red-500/30
+                         {% elif category == 'success' %}bg-green-500/20 text-green-300 border border-green-500/30
+                         {% else %}bg-brand-blue/20 text-blue-300 border border-brand-blue/30{% endif %}">
+                        <span>{{ message }}</span>
+                        <button @click="show = false" class="ml-4 opacity-60 hover:opacity-100">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ═══════════ MAIN CONTENT ═══════════ -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer class="border-t border-brand-border mt-16">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">⚡</span>
+                        <span class="text-lg font-bold bg-gradient-to-r from-brand-yellow to-brand-blue bg-clip-text text-transparent">ElectroSwap</span>
+                    </div>
+                    <p class="text-sm text-gray-500">Your one-stop hardware shop — CPUs, GPUs, Monitors and more.</p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Shop</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="{{ url_for('products.catalog', category='CPU') }}" class="hover:text-brand-yellow transition-colors">CPUs</a></li>
+                        <li><a href="{{ url_for('products.catalog', category='GPU') }}" class="hover:text-brand-yellow transition-colors">GPUs</a></li>
+                        <li><a href="{{ url_for('products.catalog', category='Monitor') }}" class="hover:text-brand-yellow transition-colors">Monitors</a></li>
+                        <li><a href="{{ url_for('products.catalog', category='Motherboard') }}" class="hover:text-brand-yellow transition-colors">Motherboards</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-300 mb-3">More</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="{{ url_for('products.catalog', category='RAM') }}" class="hover:text-brand-yellow transition-colors">RAM</a></li>
+                        <li><a href="{{ url_for('products.catalog', category='Storage') }}" class="hover:text-brand-yellow transition-colors">Storage</a></li>
+                        <li><a href="{{ url_for('products.catalog', category='PSU') }}" class="hover:text-brand-yellow transition-colors">Power Supplies</a></li>
+                        <li><a href="{{ url_for('products.catalog', category='Case') }}" class="hover:text-brand-yellow transition-colors">Cases</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Account</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="{{ url_for('auth.login') }}" class="hover:text-brand-yellow transition-colors">Login</a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="hover:text-brand-yellow transition-colors">Register</a></li>
+                        <li><a href="{{ url_for('cart.view') }}" class="hover:text-brand-yellow transition-colors">Cart</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-border mt-8 pt-6 text-center text-xs text-gray-600">
+                &copy; 2026 ElectroSwap. School project – M165 LB2.
+            </div>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
