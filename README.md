@@ -123,14 +123,14 @@ Dann im Browser öffnen: `http://127.0.0.1:5001/`
 - Warenkorb
 
 **Wo im Code**
-- Produkte: `/home/runner/work/ElectroSwap/ElectroSwap/app/products/routes.py`
-  - Templates: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/products/catalog.html`, `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/products/detail.html`
-- Warenkorb: `/home/runner/work/ElectroSwap/ElectroSwap/app/cart/routes.py`
-  - Template: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/cart/cart.html`
-- Wishlist: `/home/runner/work/ElectroSwap/ElectroSwap/app/wishlist/routes.py`
-  - Template: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/wishlist/wishlist.html`
-- Bestellungen: `/home/runner/work/ElectroSwap/ElectroSwap/app/orders/routes.py`
-  - Templates: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/orders/history.html`, `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/orders/order_detail.html`
+- Produkte: `app/products/routes.py`
+  - Templates: `app/templates/products/catalog.html`, `app/templates/products/detail.html`
+- Warenkorb: `app/cart/routes.py`
+  - Template: `app/templates/cart/cart.html`
+- Wishlist: `app/wishlist/routes.py`
+  - Template: `app/templates/wishlist/wishlist.html`
+- Bestellungen: `app/orders/routes.py`
+  - Templates: `app/templates/orders/history.html`, `app/templates/orders/order_detail.html`
 
 **Sprechsatz (1–2 Sätze)**
 > Alle Views lesen direkt aus MongoDB Collections (`products`, `reviews`, `orders`, etc.) und rendern dynamisch mit Jinja-Templates.
@@ -148,11 +148,11 @@ Dann im Browser öffnen: `http://127.0.0.1:5001/`
   - Checkout: erstellt Order + leert Basket
 
 **Wo im Code**
-- Admin CRUD: `/home/runner/work/ElectroSwap/ElectroSwap/app/admin/routes.py`
-  - Templates: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/admin/*`
-- Cart CRUD: `/home/runner/work/ElectroSwap/ElectroSwap/app/cart/routes.py`
-- Wishlist CRUD: `/home/runner/work/ElectroSwap/ElectroSwap/app/wishlist/routes.py`
-- Checkout / Order-Erstellung: `/home/runner/work/ElectroSwap/ElectroSwap/app/orders/routes.py`
+- Admin CRUD: `app/admin/routes.py`
+  - Templates: `app/templates/admin/*`
+- Cart CRUD: `app/cart/routes.py`
+- Wishlist CRUD: `app/wishlist/routes.py`
+- Checkout / Order-Erstellung: `app/orders/routes.py`
 
 **Sprechsatz**
 > CRUD ist umgesetzt: Admin verwaltet Produkte (Insert/Update/Delete), User verwaltet Cart/Wishlist; Checkout erstellt Orders und passt den Bestand an.
@@ -164,8 +164,8 @@ Dann im Browser öffnen: `http://127.0.0.1:5001/`
 - Zeigen, dass `specs` unterschiedliche Keys hat (z. B. CPU: `cores`/`threads`, GPU: `cuda_cores`, Monitor: `refresh_rate`)
 
 **Wo im Code**
-- Seeder/DB: `/home/runner/work/ElectroSwap/ElectroSwap/seed_data.py` (`specs` ist je Produkt heterogen)
-- Darstellung: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/products/detail.html` (dynamische Specs-Tabelle)
+- Seeder/DB: `seed_data.py` (`specs` ist je Produkt heterogen)
+- Darstellung: `app/templates/products/detail.html` (dynamische Specs-Tabelle)
 
 **Sprechsatz**
 > MongoDB erlaubt heterogene Dokumente: `products.specs` ist je Kategorie unterschiedlich. Die UI rendert diese Attribute dynamisch.
@@ -179,8 +179,8 @@ Dann im Browser öffnen: `http://127.0.0.1:5001/`
 - Formularvalidierung (z. B. Checkout-Adresse ist Pflicht)
 
 **Wo im Code**
-- Layout: `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/base.html`
-- Styling: Tailwind-Klassen in `/home/runner/work/ElectroSwap/ElectroSwap/app/templates/**`
+- Layout: `app/templates/base.html`
+- Styling: Tailwind-Klassen in `app/templates/**`
 - UX-Feedback: Flash-Messages in mehreren Routes + Anzeige in `base.html`
 
 **Sprechsatz**
@@ -193,11 +193,11 @@ Dann im Browser öffnen: `http://127.0.0.1:5001/`
 - Projektstruktur + Blueprints
 - DB-Collections + kurzer Zweck
 - Wichtige Dateien:
-  - App-Factory + DB Setup: `/home/runner/work/ElectroSwap/ElectroSwap/app/__init__.py`
-  - User-Model: `/home/runner/work/ElectroSwap/ElectroSwap/app/models.py`
-  - Entry Point: `/home/runner/work/ElectroSwap/ElectroSwap/run.py`
-  - Seeder: `/home/runner/work/ElectroSwap/ElectroSwap/seed_data.py`
-  - Basis-Doku: `/home/runner/work/ElectroSwap/ElectroSwap/README.md`
+  - App-Factory + DB Setup: `app/__init__.py`
+  - User-Model: `app/models.py`
+  - Entry Point: `run.py`
+  - Seeder: `seed_data.py`
+  - Basis-Doku: `README.md`
 
 **Screenshots (empfohlen)**
 - Startseite/Katalog
@@ -210,16 +210,16 @@ Dann im Browser öffnen: `http://127.0.0.1:5001/`
 ### Wichtige LB2-Punkte (Kurzargumente)
 
 **A) Indexes (Performance / Kriterium 5.1)**
-- Ort: `/home/runner/work/ElectroSwap/ElectroSwap/app/__init__.py` (`_ensure_indexes()`)
+- Ort: `app/__init__.py` (`_ensure_indexes()`)
 - Sprechsatz:
   > Ich erstelle DB-Indexes (email unique, text search, category/brand/price), damit Suche & Filter performant sind.
 
 **B) Transaktionen / Bestellprozess (Kriterium 5.2)**
-- Ort: `/home/runner/work/ElectroSwap/ElectroSwap/app/orders/routes.py` (Checkout mit Transaction + Standalone-Fallback)
+- Ort: `app/orders/routes.py` (Checkout mit Transaction + Standalone-Fallback)
 - Sprechsatz:
   > Checkout reduziert Stock, erstellt Order (Snapshot) und leert Basket – idealerweise atomar via Transaktion; lokal gibt es einen Fallback für Standalone-MongoDB.
 
 **C) Genügend Testdaten**
-- Ort: `/home/runner/work/ElectroSwap/ElectroSwap/seed_data.py`
+- Ort: `seed_data.py`
 - Sprechsatz:
   > Der Seeder generiert konsistente, realistische Testdaten für eine stabile Live-Demo mit mehreren Usern, Produkten, Reviews und Bestellungen.
