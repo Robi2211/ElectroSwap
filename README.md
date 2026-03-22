@@ -171,7 +171,7 @@ db.products.insertOne({
   name: "Beispiel Produkt",
   brand: "Beispiel Marke",
   price: 199.90,
-  category: "GPU", // z.B. CPU, GPU, Monitor, Motherboard, PSU, RAM, Case, Storage, Cooling, Peripherals
+  category: "GPU", // siehe Kategorien im Seed-Skript (seed_data.py)
   stock_quantity: 10,
   images: ["/static/images/products/example.jpg"],
   description: "Kurze Produktbeschreibung",
@@ -284,7 +284,7 @@ ElectroSwap/
 **1. Erweiterte Datenbank-Funktionen**
 
 - **Index-Strategie für Performance**  
-  In der Collection `products` werden Text- und Feldindizes (u. a. Kategorie, Marke, Preis) genutzt; bei `users` wird E-Mail eindeutig indexiert.  
+  In der Collection `products` werden Text- und Feldindizes (u. a. Kategorie, Marke, Preis) genutzt; bei `users` ist E-Mail mit einem Unique-Index versehen (Initialisierung in `app/__init__.py`, `_ensure_indexes`).  
   **Mehrwert:** Schnellere Suche/Filterung und Vermeidung doppelter Benutzerkonten.
 
 - **Transaktionen im Checkout-Prozess**  
