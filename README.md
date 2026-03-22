@@ -279,6 +279,44 @@ ElectroSwap/
 └── requirements.txt
 ```
 
+## Weitere Kompetenzen (optional) – Dokumentation (Word-Format)
+
+**1. Erweiterte Datenbank-Funktionen**
+
+- **Index-Strategie für Performance**  
+  In der Collection `products` werden Text- und Feldindizes (u. a. Kategorie, Marke, Preis) genutzt; bei `users` wird E-Mail eindeutig indexiert.  
+  **Mehrwert:** Schnellere Suche/Filterung und Vermeidung doppelter Benutzerkonten.
+
+- **Transaktionen im Checkout-Prozess**  
+  Beim Bestellabschluss werden Bestandsprüfung, Bestandsreduktion, Bestellungserstellung und Warenkorb-Leerung in einer MongoDB-Transaktion ausgeführt.  
+  **Mehrwert:** Datenkonsistenz auch bei Fehlern oder konkurrierenden Zugriffen.
+
+- **Snapshot-Prinzip bei Bestellungen**  
+  In `orders.order_items` werden `name_at_purchase` und `price_at_purchase` gespeichert.  
+  **Mehrwert:** Historische Bestellungen bleiben korrekt, auch wenn sich Produktdaten später ändern.
+
+- **Flexible Produktattribute (`specs`)**  
+  Produkte besitzen je Kategorie unterschiedliche technische Felder im Objekt `specs` (heterogene Dokumente).  
+  **Mehrwert:** Hohe Flexibilität ohne starres relationales Schema.
+
+**2. Erweiterte Applikations-Funktionen**
+
+- **Wishlist mit Move-to-Cart**  
+  Produkte können gemerkt und direkt in den Warenkorb übernommen werden.  
+  **Mehrwert:** Verbesserte User Experience und höherer Conversion-Fokus.
+
+- **Verified-Purchase-Reviews**  
+  Bewertungen sind an einen verifizierten Kauf gekoppelt (`verified_purchase`).  
+  **Mehrwert:** Höhere Qualität und Glaubwürdigkeit von Produktbewertungen.
+
+- **Rollenbasiertes Berechtigungskonzept**  
+  Trennung zwischen `customer` und `admin` mit eigenem Admin-Bereich (Produkt-/Bestellverwaltung).  
+  **Mehrwert:** Sichere Rechtevergabe und klare Trennung von Kunden- und Verwaltungsfunktionen.
+
+- **Modularer Aufbau über Flask-Blueprints**  
+  Die Features sind in fachliche Module (`auth`, `products`, `cart`, `orders`, `reviews`, `admin` usw.) getrennt.  
+  **Mehrwert:** Bessere Wartbarkeit, Testbarkeit und Erweiterbarkeit der Anwendung.
+
 ## LB2 Criteria Coverage
 
 | Criterion | Description | Implementation |
