@@ -15,6 +15,31 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | Auth       | bcrypt + Flask-Login                 |
 | Forms      | Flask-WTF (CSRF protection)          |
 
+## Technologien und Begründung (Word-Format)
+
+**1. Python 3.11 + Flask (Backend)**  
+Flask wurde gewählt, weil es ein leichtgewichtiges und gut strukturierbares Web-Framework ist.  
+Durch Flask-Blueprints kann die Anwendung in fachliche Module (z. B. Auth, Produkte, Warenkorb, Bestellungen) getrennt werden.  
+Python ermöglicht zudem eine schnelle Entwicklung und gute Lesbarkeit des Codes.
+
+**2. MongoDB + PyMongo (Datenhaltung)**  
+MongoDB wurde gewählt, weil Produktdaten je nach Kategorie unterschiedliche technische Eigenschaften besitzen.  
+Diese variablen Attribute können in MongoDB flexibel über Dokumente und das Feld `specs` gespeichert werden.  
+PyMongo bietet dabei eine direkte, performante Anbindung aus Flask.
+
+**3. Jinja2 (Serverseitiges Templating)**  
+Jinja2 eignet sich für klassische serverseitige Render-Logik und ist nahtlos in Flask integriert.  
+Dynamische Inhalte wie Produktlisten, Detailseiten und Bestellverläufe können dadurch klar und wartbar umgesetzt werden.
+
+**4. Tailwind CSS + Alpine.js (Frontend)**  
+Tailwind CSS wurde für ein konsistentes, modernes UI mit schneller Styling-Entwicklung gewählt.  
+Alpine.js ergänzt kleine interaktive Funktionen (z. B. UI-Zustände), ohne ein schweres Frontend-Framework einzuführen.
+
+**5. Flask-Login, bcrypt, Flask-WTF (Sicherheit & Benutzerverwaltung)**  
+Flask-Login übernimmt Session-Management und Zugriff auf den angemeldeten Benutzer.  
+bcrypt schützt Passwörter durch sichere Hashing-Verfahren.  
+Flask-WTF schützt Formulare gegen CSRF-Angriffe.
+
 ## Features
 
 - **User Authentication** – Register, login, logout, profile with address editing
@@ -27,6 +52,46 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 - **Reviews** – Only verified purchasers can review (verified_purchase check)
 - **Admin Panel** – Product CRUD, stock management, order status updates, dashboard
 - **Role-based Access Control** – Customer vs Admin roles
+
+## Aufbau der Applikation (Word-Format)
+
+**Architekturansatz**  
+Die Applikation folgt einem praxisnahen, Flask-typischen **MVC-nahen Aufbau**:
+
+- **Model (Datenebene):** MongoDB-Dokumente und Zugriffe über PyMongo (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`).
+- **Controller (Logik):** Flask-Blueprint-Routen in `app/*/routes.py` verarbeiten Requests, validieren Eingaben und steuern Datenbankoperationen.
+- **View (Darstellung):** Jinja2-Templates in `app/templates/**` rendern HTML-Seiten für Benutzer und Admins.
+
+Ergänzend wird das **Application-Factory-Pattern** genutzt (`create_app()` in `app/__init__.py`), wodurch Konfiguration, Extension-Initialisierung und Blueprint-Registrierung zentral und wartbar bleiben.
+
+**Code- und Dateistruktur (Überblick)**  
+
+- `run.py`  
+  Einstiegspunkt zum Starten der Anwendung.
+- `app/__init__.py`  
+  Application Factory, Initialisierung von Flask, MongoDB, Login, CSRF, Indexen und Blueprints.
+- `app/models.py`  
+  User-Wrapper für Flask-Login und User-Loader.
+- `app/auth/routes.py`  
+  Registrierung, Login, Logout, Profilverwaltung.
+- `app/products/routes.py`  
+  Produktkatalog, Filterung, Suche, Produktdetails.
+- `app/cart/routes.py`  
+  Warenkorb-Funktionen (hinzufügen, ändern, entfernen).
+- `app/orders/routes.py`  
+  Checkout-Prozess, Bestellungen, Bestellhistorie.
+- `app/reviews/routes.py`  
+  Bewertungslogik inkl. Verified-Purchase-Prüfung.
+- `app/admin/routes.py`  
+  Admin-Dashboard sowie Produkt-/Bestellverwaltung.
+- `app/templates/`  
+  Seitenlayouts und UI-Komponenten (Jinja2 + Tailwind CSS).
+- `seed_data.py`  
+  Seed-Skript zum Befüllen der Datenbank mit Beispieldaten.
+
+**Begründung für diese Struktur**  
+Die modulare Trennung nach fachlichen Bereichen reduziert Komplexität, verbessert Wartbarkeit und erleichtert Teamarbeit.  
+Neue Features können als eigener Blueprint ergänzt werden, ohne bestehende Bereiche stark zu beeinflussen.
 
 ## MongoDB Collections
 
