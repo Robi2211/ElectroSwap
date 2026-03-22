@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Manage Products{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-white">Products</h1>
+            <p class="text-sm text-gray-500 mt-1">{{ products|length }} product{{ 's' if products|length != 1 }}</p>
+        </div>
+        <a href="{{ url_for('admin.product_create') }}" class="px-5 py-2.5 bg-brand-yellow text-brand-dark font-bold rounded-lg hover:bg-yellow-300 transition-colors text-sm">+ New Product</a>
+    </div>
+
+    {% if products %}
+    <div class="glass rounded-xl overflow-hidden overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="border-b border-brand-border">
+                <tr class="text-xs text-gray-400 uppercase tracking-wider">
+                    <th class="px-5 py-3 text-left">Product</th>
+                    <th class="px-5 py-3 text-left">Category</th>
+                    <th class="px-5 py-3 text-left">Brand</th>
+                    <th class="px-5 py-3 text-right">Price</th>
+                    <th class="px-5 py-3 text-right">Stock</th>
+                    <th class="px-5 py-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-brand-border">
+                {% for p in products %}
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="px-5 py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-brand-surface overflow-hidden flex-shrink-0">
+                                <img src="{{ p.images[0] if p.images else 'https://placehold.co/80x80/1a1a2e/facc15?text=P' }}" alt="" class="w-full h-full object-cover">
+                            </div>
+                            <span class="text-white font-medium">{{ p.name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-5 py-3 text-gray-400">{{ p.category }}</td>
+                    <td class="px-5 py-3 text-gray-400">{{ p.brand }}</td>
+                    <td class="px-5 py-3 text-right text-brand-yellow font-semibold">CHF {{ "%.2f"|format(p.price) }}</td>
+                    <td class="px-5 py-3 text-right {% if p.stock_quantity > 0 %}text-green-400{% else %}text-red-400{% endif %}">{{ p.stock_quantity }}</td>
+                    <td class="px-5 py-3 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{{ url_for('admin.product_edit', product_id=p._id) }}" class="text-brand-blue hover:text-brand-yellow transition-colors text-xs font-medium">Edit</a>
+                            <form method="POST" action="{{ url_for('admin.product_delete', product_id=p._id) }}" onsubmit="return confirm('Delete this product?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="text-red-400 hover:text-red-300 transition-colors text-xs font-medium">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-sm text-gray-500">No products. Click "New Product" to add one.</p>
+    {% endif %}
+</div>
+{% endblock %}

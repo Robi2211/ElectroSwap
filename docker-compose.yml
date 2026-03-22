@@ -1,0 +1,103 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ElectroSwap – Docker Compose (horizontale Skalierung mit 3 App-Nodes)
+# ─────────────────────────────────────────────────────────────────────────────
+# Starten:   docker compose up --build
+# Stoppen:   docker compose down
+# Logs:      docker compose logs -f
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── MongoDB ─────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7.0
+    container_name: electroswap_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: RootPass000!
+      MONGO_INITDB_DATABASE: electroswap
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-init/init-users.js:/docker-entrypoint-initdb.d/init-users.js:ro
+      - ./backup/dumps:/dump
+    networks:
+      - electroswap_net
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Flask App – Node 1 ───────────────────────────────────────────────────────
+  app1:
+    build: .
+    container_name: electroswap_app1
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: "${SECRET_KEY:-change-this-in-production}"
+      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo:27017/electroswap?authSource=electroswap"
+      FLASK_DEBUG: "0"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - electroswap_net
+
+  # ── Flask App – Node 2 ───────────────────────────────────────────────────────
+  app2:
+    build: .
+    container_name: electroswap_app2
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: "${SECRET_KEY:-change-this-in-production}"
+      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo:27017/electroswap?authSource=electroswap"
+      FLASK_DEBUG: "0"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - electroswap_net
+
+  # ── Flask App – Node 3 ───────────────────────────────────────────────────────
+  app3:
+    build: .
+    container_name: electroswap_app3
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: "${SECRET_KEY:-change-this-in-production}"
+      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo:27017/electroswap?authSource=electroswap"
+      FLASK_DEBUG: "0"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - electroswap_net
+
+  # ── Nginx Load Balancer ─────────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: electroswap_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app1
+      - app2
+      - app3
+    networks:
+      - electroswap_net
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  electroswap_net:
+    driver: bridge

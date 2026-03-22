@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- ═══════════ HERO ═══════════ -->
+<section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-brand-dark via-brand-surface to-brand-dark"></div>
+    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 50%, rgba(250,204,21,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(59,130,246,0.15) 0%, transparent 50%);"></div>
+    <div class="relative max-w-7xl mx-auto px-4 py-24 md:py-36 text-center">
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
+            <span class="bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-blue bg-clip-text text-transparent">ElectroSwap</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">Your one-stop hardware shop — CPUs, GPUs, Monitors and more. Premium components at competitive prices.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ url_for('products.catalog') }}" class="px-8 py-3 bg-brand-yellow text-brand-dark font-bold rounded-xl hover:bg-yellow-300 transition-all glow-yellow text-sm">Browse All Products</a>
+            <a href="{{ url_for('products.catalog', category='GPU') }}" class="px-8 py-3 border border-brand-blue text-brand-blue font-semibold rounded-xl hover:bg-brand-blue hover:text-white transition-all text-sm">Shop GPUs</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CATEGORIES ═══════════ -->
+<section class="max-w-7xl mx-auto px-4 py-16">
+    <h2 class="text-2xl md:text-3xl font-bold text-white mb-8">Shop by Category</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {% set cat_icons = {'CPU': '🔲', 'GPU': '🎮', 'Monitor': '🖥️', 'Motherboard': '🔧', 'PSU': '🔌', 'RAM': '💾', 'Case': '📦', 'Storage': '💿'} %}
+        {% for cat in categories %}
+        <a href="{{ url_for('products.catalog', category=cat) }}" class="glass rounded-xl p-6 text-center card-hover group">
+            <div class="text-3xl mb-3">{{ cat_icons.get(cat, '⚙️') }}</div>
+            <div class="text-sm font-semibold text-gray-300 group-hover:text-brand-yellow transition-colors">{{ cat }}</div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ═══════════ FEATURED PRODUCTS ═══════════ -->
+<section class="max-w-7xl mx-auto px-4 py-16">
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-white">Latest Products</h2>
+        <a href="{{ url_for('products.catalog') }}" class="text-sm text-brand-blue hover:text-brand-yellow transition-colors font-medium">View All →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for product in featured %}
+        <a href="{{ url_for('products.detail', product_id=product._id) }}" class="glass rounded-xl overflow-hidden card-hover group">
+            <div class="aspect-[4/3] bg-brand-surface flex items-center justify-center overflow-hidden">
+                <img src="{{ product.images[0] if product.images else 'https://placehold.co/600x400/1a1a2e/facc15?text=Product' }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="p-4">
+                <div class="text-xs text-brand-blue font-medium mb-1">{{ product.category }} · {{ product.brand }}</div>
+                <h3 class="text-sm font-semibold text-white group-hover:text-brand-yellow transition-colors line-clamp-2 mb-2">{{ product.name }}</h3>
+                <div class="flex items-center justify-between">
+                    <span class="text-lg font-bold text-brand-yellow">CHF {{ "%.2f"|format(product.price) }}</span>
+                    {% set stock_qty = product.get('stock_quantity', product.get('stock', 0)) %}
+                    <span class="text-xs {% if stock_qty > 0 %}text-green-400{% else %}text-red-400{% endif %}">
+                        {% if stock_qty > 0 %}In Stock{% else %}Out of Stock{% endif %}
+                    </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ═══════════ FEATURES BAR ═══════════ -->
+<section class="border-t border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-yellow/10 flex items-center justify-center text-brand-yellow text-xl">🚀</div>
+            <div>
+                <div class="text-sm font-semibold text-white">Fast Shipping</div>
+                <div class="text-xs text-gray-500">Next-day delivery available</div>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-xl">🛡️</div>
+            <div>
+                <div class="text-sm font-semibold text-white">Secure Checkout</div>
+                <div class="text-xs text-gray-500">MongoDB transactions</div>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 text-xl">⭐</div>
+            <div>
+                <div class="text-sm font-semibold text-white">Verified Reviews</div>
+                <div class="text-xs text-gray-500">Only from real buyers</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
