@@ -39,6 +39,99 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `orders` | Order history with snapshot data | Snapshot principle (LB2 5.2) |
 | `reviews` | Product reviews (verified purchase) | Referencing |
 
+## Einfügebefehle pro Entitätstyp (MongoDB)
+
+Falls alle Entitäten auf einmal eingefügt werden sollen, kann das bestehende Seed-Skript verwendet werden:
+
+```bash
+python seed_data.py
+```
+
+Für einzelne Entitäten können die folgenden `mongosh`-Befehle verwendet werden (jeweils mit allen Attributen aus dem Code):
+
+```javascript
+// users
+db.users.insertOne({
+  username: "max",
+  email: "max@example.com",
+  password_hash: "$2b$12$REPLACE_WITH_BCRYPT_HASH",
+  role: "customer", // oder "admin"
+  address: {
+    street: "Musterstrasse 1",
+    city: "Zürich",
+    zip_code: "8000",
+    country: "Switzerland"
+  },
+  created_at: new Date()
+})
+
+// products
+db.products.insertOne({
+  name: "Beispiel Produkt",
+  brand: "Beispiel Marke",
+  price: 199.90,
+  category: "GPU", // z.B. CPU, GPU, Monitor, Motherboard, PSU, RAM, Case, Storage, Cooling, Peripherals
+  stock_quantity: 10,
+  images: ["/static/images/products/example.jpg"],
+  description: "Kurze Produktbeschreibung",
+  specs: {
+    memory: "12 GB",
+    interface: "PCIe 4.0 x16"
+  },
+  created_at: new Date()
+})
+
+// baskets
+db.baskets.insertOne({
+  user_id: ObjectId("64b000000000000000000001"),
+  items: [
+    { product_id: ObjectId("64b000000000000000000101"), quantity: 2 }
+  ],
+  last_updated: new Date()
+})
+
+// wishlists
+db.wishlists.insertOne({
+  user_id: ObjectId("64b000000000000000000001"),
+  name: "My Wishlist",
+  items: [
+    { product_id: ObjectId("64b000000000000000000101"), added_at: new Date() }
+  ]
+})
+
+// orders
+db.orders.insertOne({
+  user_id: ObjectId("64b000000000000000000001"),
+  order_date: new Date(),
+  total_price: 399.80,
+  status: "confirmed",
+  shipping_address: {
+    street: "Musterstrasse 1",
+    city: "Zürich",
+    zip_code: "8000",
+    country: "Switzerland"
+  },
+  order_items: [
+    {
+      product_id: ObjectId("64b000000000000000000101"),
+      name_at_purchase: "Beispiel Produkt",
+      price_at_purchase: 199.90,
+      quantity: 2
+    }
+  ]
+})
+
+// reviews
+db.reviews.insertOne({
+  product_id: ObjectId("64b000000000000000000101"),
+  user_id: ObjectId("64b000000000000000000001"),
+  rating: 5,
+  comment: "Sehr gutes Produkt",
+  verified_purchase: true,
+  created_at: new Date()
+})
+```
+
 ## Quick Start
 
 ```bash
