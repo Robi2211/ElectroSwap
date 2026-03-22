@@ -39,6 +39,42 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `orders` | Order history with snapshot data | Snapshot principle (LB2 5.2) |
 | `reviews` | Product reviews (verified purchase) | Referencing |
 
+## Konzeptionelles Datenmodell (Erklärung zum Diagramm)
+
+Das konzeptionelle Modell beschreibt die fachlichen Hauptobjekte des Shops und ihre Beziehungen:
+
+- **User**: Konto eines Kunden oder Admins.
+- **Products**: Verkaufbare Hardware-Artikel.
+- **Reviews**: Bewertungen, die ein User zu einem Produkt schreibt.
+- **Wishlist**: Merkliste eines Users mit gespeicherten Produkten.
+- **Orders/Basket**: Warenkorb- und Bestellkontext, in dem Produkte einem User zugeordnet sind.
+
+### Beziehungen und Kardinalitäten
+
+1. **User ↔ Reviews**  
+   Ein User kann **0..n Reviews** schreiben, eine Review gehört immer zu **genau 1 User**.
+
+2. **Products ↔ Reviews**  
+   Ein Produkt kann **0..n Reviews** haben, eine Review bezieht sich auf **genau 1 Produkt**.
+
+3. **User ↔ Wishlist**  
+   Ein User hat fachlich **0..1 aktive Wishlist**, eine Wishlist gehört zu **genau 1 User**.
+
+4. **Wishlist ↔ Products**  
+   Eine Wishlist enthält **0..n Produkte**, und ein Produkt kann in **0..n Wishlists** vorkommen  
+   (also eine **n:m-Beziehung**, technisch über die `items`-Liste gelöst).
+
+5. **User ↔ Orders/Basket**  
+   Ein User kann **0..1 aktiven Basket** und über die Zeit **0..n Orders** haben; diese gehören jeweils zu **genau 1 User**.
+
+6. **Orders/Basket ↔ Products**  
+   Basket/Order enthalten **1..n Produkte**, ein Produkt kann in **0..n Baskets/Orders** vorkommen  
+   (ebenfalls **n:m**, technisch über `items` bzw. `order_items`).
+
+### Wichtige fachliche Regel
+
+- **Review nur bei Kauf**: Reviews sind an einen verifizierten Kauf gekoppelt (Verified Purchase).
+
 ## Einfügebefehle pro Entitätstyp (MongoDB)
 
 Falls alle Entitäten auf einmal eingefügt werden sollen, kann das bestehende Seed-Skript verwendet werden:
