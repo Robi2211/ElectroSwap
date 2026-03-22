@@ -151,14 +151,15 @@ python seed_data.py
 Für einzelne Entitäten können die folgenden `mongosh`-Befehle verwendet werden (jeweils mit allen Attributen aus dem Code):
 
 Hinweise: `ObjectId("...")`-Werte sind Platzhalter und müssen durch reale IDs aus Ihrer Datenbank ersetzt werden.  
-`password_hash` muss ein echter bcrypt-Hash sein (z. B. in Python erzeugt mit `bcrypt.hashpw(b"meinpasswort", bcrypt.gensalt()).decode("utf-8")`).
+`password_hash` muss ein echter bcrypt-Hash sein (z. B. in Python erzeugt mit `bcrypt.hashpw(b"your_secure_password_here", bcrypt.gensalt()).decode("utf-8")`).
+Der unten stehende Hash ist nur ein Formatbeispiel zur Veranschaulichung und darf nicht unverändert produktiv verwendet werden.
 
 ```javascript
 // users
 db.users.insertOne({
   username: "max",
   email: "max@example.com",
-  password_hash: "$2b$12$REPLACE_WITH_BCRYPT_HASH",
+  password_hash: "$2b$12$PLACEHOLDER_",
   role: "customer", // oder "admin"
   address: {
     street: "Musterstrasse 1",
@@ -187,25 +188,25 @@ db.products.insertOne({
 
 // baskets
 db.baskets.insertOne({
-  user_id: ObjectId("64b000000000000000000001"),
+  user_id: ObjectId("000000000000000000000001"), // durch reale user_id ersetzen
   items: [
-    { product_id: ObjectId("64b000000000000000000101"), quantity: 2 }
+    { product_id: ObjectId("000000000000000000000101"), quantity: 2 }
   ],
   last_updated: new Date()
 })
 
 // wishlists
 db.wishlists.insertOne({
-  user_id: ObjectId("64b000000000000000000001"),
+  user_id: ObjectId("000000000000000000000002"),
   name: "My Wishlist",
   items: [
-    { product_id: ObjectId("64b000000000000000000101"), added_at: new Date() }
+    { product_id: ObjectId("000000000000000000000102"), added_at: new Date() }
   ]
 })
 
 // orders
 db.orders.insertOne({
-  user_id: ObjectId("64b000000000000000000001"),
+  user_id: ObjectId("000000000000000000000003"),
   order_date: new Date(),
   total_price: 399.80,
   status: "confirmed",
@@ -217,7 +218,7 @@ db.orders.insertOne({
   },
   order_items: [
     {
-      product_id: ObjectId("64b000000000000000000101"),
+      product_id: ObjectId("000000000000000000000103"),
       name_at_purchase: "Beispiel Produkt",
       price_at_purchase: 199.90,
       quantity: 2
@@ -227,8 +228,8 @@ db.orders.insertOne({
 
 // reviews
 db.reviews.insertOne({
-  product_id: ObjectId("64b000000000000000000101"),
-  user_id: ObjectId("64b000000000000000000001"),
+  product_id: ObjectId("000000000000000000000104"),
+  user_id: ObjectId("000000000000000000000004"),
   rating: 5,
   comment: "Sehr gutes Produkt",
   verified_purchase: true,
@@ -329,6 +330,10 @@ Der Aufbau der Applikation folgt einem **MVC-nahen Ansatz**: Die Datenebene wird
 Die GUI ist als **professionelles Dark-Theme** umgesetzt und legt Wert auf **Ergonomie und intuitive Bedienung**: klare Navigationsstruktur, konsistente Komponenten, gut lesbare Produktdarstellung, verständliche Formular- und Checkout-Abläufe sowie eine getrennte Admin-Oberfläche für Verwaltungsaufgaben. Für den **Zugriff auf den Quellcode** dient das Repository mit der dokumentierten Projektstruktur (u. a. `app/`, `seed_data.py`, `run.py`, `requirements.txt`), sodass Funktionen und Datenflüsse nachvollziehbar geprüft werden können. **Screenshots** der zentralen Ansichten (Startseite, Katalog, Produktdetail, Warenkorb/Checkout, Admin-Dashboard) werden als visueller Nachweis der Benutzerführung und des Designs verwendet.
 
 Die Applikation ist **voll ausgebaut**: Alle relevanten Entitätsmengen sind modelliert und implementiert (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`), es existieren **Indexe** für Performance und Datenqualität (u. a. Text-/Feldindizes auf Produkten, Unique-Index auf `users.email`), und die Anwendung unterstützt das **Einfügen/Ändern** von Daten über mehrere Funktionsbereiche (z. B. Produktverwaltung, Warenkorb, Bestellungen, Bewertungen). Zudem sind **mehrere Seiten** mit vollständigen User-Flows vorhanden (Authentifizierung, Katalog, Detailseite, Warenkorb, Checkout, Bestellhistorie, Wishlist, Admin). Damit sind sowohl die funktionalen Anforderungen als auch der Anspruch an professionelles Design und intuitive Bedienung erfüllt.
+
+## Separater Teil: Voll ausgebaute Applikation (Word-Format)
+
+Die Applikation ist vollständig ausgebaut und erfüllt die geforderten Kernpunkte: **Alle Entitätsmengen** sind umgesetzt (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`) und in der Datenbank produktiv nutzbar. Für Leistung und Datenqualität bestehen **Indexe** (u. a. Produktsuche/Filter über Feld- und Textindexe sowie ein Unique-Index auf `users.email`). Das **Einfügen und Ändern** von Daten ist in mehreren Bereichen implementiert (z. B. Benutzerkonto, Produktverwaltung im Admin-Bereich, Warenkorb-Positionen, Bestellstatus und Bewertungen). Zusätzlich umfasst das System **mehrere Seiten mit durchgängigen Abläufen** (Login/Registrierung, Produktkatalog, Produktdetail, Warenkorb, Checkout, Bestellhistorie, Wishlist, Admin). Insgesamt entspricht die Lösung damit einer professionell nutzbaren, intuitiv bedienbaren Full-Application.
 
 ## LB2 Criteria Coverage
 
