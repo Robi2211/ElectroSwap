@@ -150,6 +150,9 @@ python seed_data.py
 
 Für einzelne Entitäten können die folgenden `mongosh`-Befehle verwendet werden (jeweils mit allen Attributen aus dem Code):
 
+Hinweise: `ObjectId("...")`-Werte sind Platzhalter und müssen durch reale IDs aus Ihrer Datenbank ersetzt werden.  
+`password_hash` muss ein echter bcrypt-Hash sein (z. B. in Python erzeugt mit `bcrypt.hashpw(b"meinpasswort", bcrypt.gensalt()).decode("utf-8")`).
+
 ```javascript
 // users
 db.users.insertOne({
@@ -171,7 +174,7 @@ db.products.insertOne({
   name: "Beispiel Produkt",
   brand: "Beispiel Marke",
   price: 199.90,
-  category: "GPU", // siehe Kategorien im Seed-Skript (seed_data.py)
+  category: "GPU", // gültige Werte siehe seed_data.py
   stock_quantity: 10,
   images: ["/static/images/products/example.jpg"],
   description: "Kurze Produktbeschreibung",
@@ -316,6 +319,16 @@ ElectroSwap/
 - **Modularer Aufbau über Flask-Blueprints**  
   Die Features sind in fachliche Module (`auth`, `products`, `cart`, `orders`, `reviews`, `admin` usw.) getrennt.  
   **Mehrwert:** Bessere Wartbarkeit, Testbarkeit und Erweiterbarkeit der Anwendung.
+
+## Gesamttext für Abgabe (Word-Format)
+
+Für die Umsetzung dieser Applikation setze ich **Python 3.11 mit Flask** als Backend-Technologie ein, da Flask durch Blueprints eine klare Modulstruktur ermöglicht und gleichzeitig eine schnelle, gut wartbare Entwicklung unterstützt. Für die Datenhaltung verwende ich **MongoDB mit PyMongo**, weil die Produktdaten je nach Kategorie unterschiedliche technische Eigenschaften aufweisen und dadurch ein flexibles Dokumentmodell (insbesondere über das Feld `specs`) sinnvoll ist. Für die Oberfläche nutze ich **Jinja2** für serverseitiges Rendering sowie **Tailwind CSS und Alpine.js** für ein modernes, performantes und dennoch schlankes Frontend. Sicherheit und Benutzerverwaltung werden über **Flask-Login**, **bcrypt** und **Flask-WTF (CSRF-Schutz)** umgesetzt.
+
+Der Aufbau der Applikation folgt einem **MVC-nahen Ansatz**: Die Datenebene wird durch MongoDB-Collections (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`) gebildet, die Logik liegt in den Flask-Controllern pro Blueprint (`app/*/routes.py`) und die Darstellung erfolgt über Jinja2-Templates in `app/templates/**`. Zusätzlich wird das **Application-Factory-Pattern** (`create_app()` in `app/__init__.py`) eingesetzt, damit Konfiguration, Extension-Initialisierung, Index-Erstellung und Blueprint-Registrierung zentral organisiert sind. Die Codebasis ist dadurch klar nach Verantwortlichkeiten getrennt und gut erweiterbar.
+
+Die GUI ist als **professionelles Dark-Theme** umgesetzt und legt Wert auf **Ergonomie und intuitive Bedienung**: klare Navigationsstruktur, konsistente Komponenten, gut lesbare Produktdarstellung, verständliche Formular- und Checkout-Abläufe sowie eine getrennte Admin-Oberfläche für Verwaltungsaufgaben. Für den **Zugriff auf den Quellcode** dient das Repository mit der dokumentierten Projektstruktur (u. a. `app/`, `seed_data.py`, `run.py`, `requirements.txt`), sodass Funktionen und Datenflüsse nachvollziehbar geprüft werden können. **Screenshots** der zentralen Ansichten (Startseite, Katalog, Produktdetail, Warenkorb/Checkout, Admin-Dashboard) werden als visueller Nachweis der Benutzerführung und des Designs verwendet.
+
+Die Applikation ist **voll ausgebaut**: Alle relevanten Entitätsmengen sind modelliert und implementiert (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`), es existieren **Indexe** für Performance und Datenqualität (u. a. Text-/Feldindizes auf Produkten, Unique-Index auf `users.email`), und die Anwendung unterstützt das **Einfügen/Ändern** von Daten über mehrere Funktionsbereiche (z. B. Produktverwaltung, Warenkorb, Bestellungen, Bewertungen). Zudem sind **mehrere Seiten** mit vollständigen User-Flows vorhanden (Authentifizierung, Katalog, Detailseite, Warenkorb, Checkout, Bestellhistorie, Wishlist, Admin). Damit sind sowohl die funktionalen Anforderungen als auch der Anspruch an professionelles Design und intuitive Bedienung erfüllt.
 
 ## LB2 Criteria Coverage
 
