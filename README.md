@@ -96,3 +96,29 @@ ElectroSwap/
 | 5.2 | Transactions | Checkout with `start_transaction()` + snapshot orders |
 | 5.5 | CRUD | Full CRUD on all collections |
 | 5.7 | Extra feature | Wishlist with move-to-cart
+
+## Textbaustein für die Dokumentation (Word-Format)
+
+### 4.4 GUI, Design und Ergonomie
+Die Benutzeroberfläche von ElectroSwap wurde mit Fokus auf ein modernes, professionelles und zugleich gut lesbares Design umgesetzt. Durch das konsistente Farbschema, klare Abstände, einheitliche Komponenten (Buttons, Karten, Formulare) und verständliche Navigation finden sich Benutzer schnell zurecht. Wichtige Aktionen wie Produktsuche, Filtern, Warenkorb und Checkout sind auf mehreren Seiten logisch angeordnet und mit wenigen Klicks erreichbar.  
+Die ergonomische Gestaltung zeigt sich besonders in der klaren Seitenstruktur, den eindeutigen Beschriftungen und der responsiven Darstellung für unterschiedliche Bildschirmgrößen. Dadurch wird die Anwendung intuitiv bedienbar und unterstützt eine effiziente Nutzung ohne lange Einarbeitung.
+
+Screenshot: Startseite mit Navigation, Produktkarten und Such-/Filterbereich  
+Screenshot: Produktdetailseite mit strukturierter Informationsdarstellung und klaren Call-to-Action-Elementen  
+Screenshot: Warenkorb- und Checkout-Seite mit übersichtlichem Ablauf
+
+### 5.5 Voll ausgebaute Applikation
+ElectroSwap erfüllt die Anforderungen an eine voll ausgebaute Applikation, da alle zentralen Entitätsmengen vollständig implementiert sind (z. B. Benutzer, Produkte, Warenkörbe, Wunschlisten, Bestellungen und Bewertungen). Die Datenhaltung ist in MongoDB sauber strukturiert und durch passende Indizes optimiert (u. a. für Suche, Kategorien, Marken, Preis sowie eindeutige Benutzer-E-Mails).  
+Zusätzlich sind die notwendigen Funktionen zum Einfügen und Ändern von Daten vorhanden. Benutzer können beispielsweise Kontodaten pflegen, Produkte in Warenkorb und Wunschliste verwalten sowie Bestellungen auslösen. Im Admin-Bereich können Produkte erstellt, bearbeitet und Bestellstatus geändert werden.  
+Die Anwendung umfasst mehrere logisch verbundene Seiten (Startseite, Katalog, Produktdetails, Authentifizierung, Profil, Warenkorb, Checkout, Bestellhistorie, Admin-Bereich) und bildet damit einen vollständigen End-to-End-Prozess eines Hardware-Shops ab.
+
+Screenshot: Admin-Bereich mit Produktverwaltung (Einfügen/Ändern)  
+Screenshot: Datenfluss vom Produktkatalog über Warenkorb bis zur Bestellung  
+Screenshot: Beispielansicht für mindestens drei unterschiedliche Entitätsmengen
+
+### 5.6 Professionelles Design und intuitive Bedienung (Voraussetzung: 5.5)
+Aufbauend auf der vollständig ausgebauten Applikation (5.5) erreicht ElectroSwap ein professionelles Gesamterscheinungsbild mit hoher Benutzerfreundlichkeit. Das visuelle Design ist konsistent, hochwertig und funktionsorientiert, sodass Benutzer jederzeit erkennen, wo sie sich befinden und welche Aktionen möglich sind.  
+Die intuitive Bedienung wird durch klare Navigationspfade, verständliche Formularführung, gut sichtbare Statusmeldungen und eine konsistente Interaktionslogik sichergestellt. Dadurch werden typische Nutzungsszenarien (Produkt finden, vergleichen, kaufen, verwalten) schnell und mit geringer Fehleranfälligkeit durchgeführt.
+
+Screenshot: Konsistente Gestaltung über mehrere Seiten hinweg (z. B. Startseite, Katalog, Profil/Admin)  
+Screenshot: Beispiel einer intuitiven Benutzerführung mit klaren Rückmeldungen (z. B. Flash-Meldung nach Aktion)
