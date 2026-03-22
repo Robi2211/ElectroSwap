@@ -109,7 +109,7 @@ Screenshot: Warenkorb- und Checkout-Seite mit übersichtlichem Ablauf
 
 ### 5.5 Voll ausgebaute Applikation
 ElectroSwap erfüllt die Anforderungen an eine voll ausgebaute Applikation, da alle zentralen Entitätsmengen vollständig implementiert sind (z. B. Benutzer, Produkte, Warenkörbe, Wunschlisten, Bestellungen und Bewertungen). Die Datenhaltung ist in MongoDB sauber strukturiert. Zusätzlich wird sie durch passende Indizes optimiert (u. a. für Suche, Kategorien, Marken, Preis sowie eindeutige Benutzer-E-Mails).  
-Zusätzlich sind die notwendigen Funktionen zum Einfügen und Ändern von Daten vorhanden. Benutzer können beispielsweise Kontodaten pflegen, Produkte in Warenkorb und Wunschliste verwalten sowie Bestellungen auslösen. Im Admin-Bereich können Produkte erstellt, bearbeitet und Bestellstatus geändert werden.  
+Darüber hinaus sind die notwendigen Funktionen zum Einfügen und Ändern von Daten vorhanden. Benutzer können beispielsweise Kontodaten pflegen, Produkte in Warenkorb und Wunschliste verwalten sowie Bestellungen auslösen. Im Admin-Bereich können Produkte erstellt, bearbeitet und Bestellstatus geändert werden.  
 Die Anwendung umfasst mehrere logisch verbundene Seiten (Startseite, Katalog, Produktdetails, Authentifizierung, Profil, Warenkorb, Checkout, Bestellhistorie, Admin-Bereich) und bildet damit einen vollständigen End-to-End-Prozess eines Hardware-Shops ab.
 
 Screenshot: Admin-Bereich mit Produktverwaltung (Einfügen/Ändern)  
