@@ -45,20 +45,22 @@ Das **konzeptionelle Datenmodell** beschreibt die wichtigsten Objekttypen eines 
 
 ### Entitätsmengen (Objekttypen)
 
-- **User** (Kunde oder Admin)
-- **Products** (verkaufte Produkte)
-- **Reviews** (Produktbewertungen)
+- **User** (Kunde oder Admin über Attribut `role`)
+- **Product** (verkaufte Produkte)
+- **Review** (Produktbewertungen)
 - **Wishlist** (Merkliste eines Users)
-- **Orders / Basket** (Bestellungen und aktiver Warenkorb)
+- **Order** (abgeschlossene Bestellung)
+- **Basket** (aktiver Warenkorb)
 
 ### Beziehungen (vereinfacht)
 
-- Ein **User** kann mehrere oder keine **Reviews** schreiben; jede **Review** gehört genau einem **User**.
-- Ein **Product** kann mehrere oder keine **Reviews** haben; jede **Review** gehört genau zu einem **Product**.
+- Ein **User** kann mehrere oder keine **Review** schreiben; jede **Review** gehört genau einem **User**.
+- Ein **Product** kann mehrere oder keine **Review** haben; jede **Review** gehört genau zu einem **Product**.
 - Ein **User** hat maximal eine **Wishlist**; diese gehört genau diesem **User**.
 - Eine **Wishlist** kann mehrere oder keine **Products** enthalten, und ein **Product** kann in mehreren oder keiner **Wishlist** vorkommen (n:m).
-- Ein **User** kann mehrere oder keine **Orders** haben und zusätzlich einen aktiven **Basket**.
-- **Orders/Basket** enthalten mehrere oder keine **Products**, und **Products** können in vielen **Orders/Baskets** vorkommen (n:m).
+- Ein **User** kann mehrere oder keine **Order** haben und zusätzlich einen aktiven **Basket**.
+- Eine **Order** kann mehrere oder keine **Products** enthalten, und **Products** können in vielen **Orders** vorkommen (n:m).
+- Ein **Basket** kann mehrere oder keine **Products** enthalten, und **Products** können in vielen **Baskets** vorkommen (n:m).
 
 ### Fachregel
 
