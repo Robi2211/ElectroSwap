@@ -184,6 +184,32 @@ Ziel: In 10 Minuten die **Applikation sichtbar zeigen** und gleichzeitig die noc
 - **Lessons Learned in 30 Sekunden:** was bei Rollen, Backup und Replika-Set schwierig war und wie ihr es gelöst habt.
 - **Takeaway in 30 Sekunden:** Was funktioniert produktiv bereits gut, was wäre der nächste Ausbau.
 
+### Sprechtext (direkt nutzbar in der Präsentation)
+
+**1) Wofür ist ElectroSwap?**
+- „ElectroSwap ist ein moderner Hardware-Webshop für PC-Komponenten wie CPU, GPU, RAM und Monitore.“
+- „Das Ziel ist ein realistischer E-Commerce-Prozess: von Produktsuche über Warenkorb bis Checkout und Bestellhistorie.“
+- „Zusätzlich gibt es einen Admin-Bereich, damit wir auch den operativen Teil eines Shops zeigen können.“
+
+**2) Welches Problem lösen wir?**
+- „Viele Hardware-Shops sind unübersichtlich: technische Daten sind schwer vergleichbar und der Kaufprozess ist oft fragmentiert.“
+- „Wir lösen das mit klaren Filtern, konsistenten Produktdetails und einem durchgängigen User-Flow.“
+- „Gleichzeitig adressieren wir ein Datenproblem: verschiedene Produktkategorien brauchen unterschiedliche Attribute – deshalb ein flexibles NoSQL-Modell mit `specs` pro Kategorie.“
+
+**3) Warum diese Technologien?**
+- „**Flask**: leichtgewichtig, klar strukturiert mit Blueprints, schnell für modulare Web-Apps.“
+- „**MongoDB/PyMongo**: ideal für heterogene Produktdaten (z. B. CPU- vs. Monitor-Spezifikationen) ohne starre Tabellenmigration.“
+- „**Tailwind CSS + Alpine.js**: schnelle, moderne UI-Entwicklung mit wenig Overhead.“
+- „**Flask-Login + bcrypt + CSRF**: saubere Authentifizierung und grundlegende Sicherheitsmechanismen.“
+
+**4) Business-/Nutzer-Nutzen in 3 Sätzen**
+- „Für Kund:innen: schneller finden, besser vergleichen, einfacher bestellen.“
+- „Für Betreiber: Admin-Workflow für Produkte/Bestellungen und bessere Datenpflege.“
+- „Für das Projektziel: wir zeigen nicht nur UI, sondern auch Datenmodell, Sicherheit, Backup/Restore und Skalierung end-to-end.“
+
+**5) Starker Abschluss-Satz**
+- „ElectroSwap verbindet Benutzerfreundlichkeit im Frontend mit einer robusten MongoDB-Architektur im Backend – genau das wollten wir mit dieser LB2 praktisch beweisen.“
+
 ### Tipps für eine flüssige Präsentation (6.2)
 
 - Alle Befehle als Copy/Paste vorbereitet haben.
