@@ -39,6 +39,35 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `orders` | Order history with snapshot data | Snapshot principle (LB2 5.2) |
 | `reviews` | Product reviews (verified purchase) | Referencing |
 
+## Konzeptionelles Datenmodell (Dokumentation 2.2)
+
+Das **konzeptionelle Datenmodell** beschreibt die wichtigsten Objekttypen eines Online-Shops und ihre Beziehungen, unabhängig vom konkreten Datenbanksystem (SQL/NoSQL).
+
+### Entitätsmengen (Objekttypen)
+
+- **User** (Kunde oder Admin)
+- **Products** (verkaufte Produkte)
+- **Reviews** (Produktbewertungen)
+- **Wishlist** (Merkliste eines Users)
+- **Orders / Basket** (Bestellungen und aktiver Warenkorb)
+
+### Beziehungen (vereinfacht)
+
+- Ein **User** kann mehrere oder keine **Reviews** schreiben; jede **Review** gehört genau einem **User**.
+- Ein **Product** kann mehrere oder keine **Reviews** haben; jede **Review** gehört genau zu einem **Product**.
+- Ein **User** hat maximal eine **Wishlist**; diese gehört genau diesem **User**.
+- Eine **Wishlist** kann mehrere oder keine **Products** enthalten, und ein **Product** kann in mehreren oder keiner **Wishlist** vorkommen (n:m).
+- Ein **User** kann mehrere oder keine **Orders** haben und zusätzlich einen aktiven **Basket**.
+- **Orders/Basket** enthalten mehrere oder keine **Products**, und **Products** können in vielen **Orders/Baskets** vorkommen (n:m).
+
+### Fachregel
+
+- **Reviews sind nur erlaubt, wenn das Produkt tatsächlich gekauft wurde** (*Verified Purchase*).
+
+### Hinweis zu Attributen
+
+Im konzeptionellen Modell werden Entitätstypen mit ihren Attributen beschrieben (**ohne IDs**). Mindestens eine Entitätsmenge muss **8 oder mehr Attribute** enthalten.
+
 ## Quick Start
 
 ```bash
