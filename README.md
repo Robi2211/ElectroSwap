@@ -210,6 +210,59 @@ Ziel: In 10 Minuten die **Applikation sichtbar zeigen** und gleichzeitig die noc
 **5) Starker Abschluss-Satz**
 - „ElectroSwap verbindet Benutzerfreundlichkeit im Frontend mit einer robusten MongoDB-Architektur im Backend – genau das wollten wir mit dieser LB2 praktisch beweisen.“
 
+### Klare Folien-Struktur (direkt für PowerPoint/Canva)
+
+**Folie 1 – Begrüssung & Team**
+- Projekttitel: **ElectroSwap – Premium Hardware Shop**
+- Kurzvorstellung Team (Namen/Rollen)
+- 1 Satz Einstieg: „Wir zeigen heute einen modernen Hardware-Shop inkl. Live-Demo und Datenbank-Setup.“
+
+**Folie 2 – Ziel der Arbeit**
+- Was wollten wir erreichen?  
+  → Einen funktionierenden E-Commerce-Prototyp mit realistischem User-Flow bauen.
+- Zusätzliches Ziel: zentrale LB2-Kriterien praktisch und live nachweisen.
+
+**Folie 3 – Problemstellung**
+- Hardware-Shops sind oft unübersichtlich und schwer vergleichbar.
+- Unterschiedliche Produkttypen brauchen unterschiedliche technische Daten.
+- Zusätzlich braucht es im Hintergrund sichere Rollen, Backup und Verfügbarkeit.
+
+**Folie 4 – Unsere Lösung (ElectroSwap)**
+- Einheitlicher Shop-Prozess: Suchen → Details → Warenkorb/Wishlist → Checkout.
+- Rollenbasiert: Customer- und Admin-Bereich.
+- Flexible Produktdaten mit `specs` je Kategorie.
+
+**Folie 5 – Technologien**
+- Backend: **Python + Flask (Blueprints)**
+- Datenbank: **MongoDB + PyMongo**
+- Frontend: **Jinja2 + Tailwind CSS + Alpine.js**
+- Sicherheit: **Flask-Login, bcrypt, CSRF**
+
+**Folie 6 – Live-Demo Applikation**
+- Customer-Flow kurz zeigen (Suche, Produktdetail, Cart/Wishlist).
+- Admin-Flow kurz zeigen (z. B. Produkt-/Bestellverwaltung).
+- Wichtig: Rollenunterschied sichtbar machen.
+
+**Folie 7 – Kriterium 3.2 (Rollen/Berechtigungen)**
+- User/Rollen anzeigen.
+- Verbotene Aktion mit eingeschränktem User (Fehler).
+- Selbe Aktion mit Admin (erfolgreich).
+
+**Folie 8 – Kriterium 3.4 (Backup & Restore)**
+- `mongodump` mit Authentifizierung.
+- Kontrollierte Datenänderung.
+- `mongorestore --drop` und Verifikation.
+
+**Folie 9 – Kriterium 3.6 (Horizontale Skalierung)**
+- 3 Nodes zeigen (PRIMARY + SECONDARYs).
+- `rs.status()` kurz präsentieren.
+- Optional: kurzer Failover-Nachweis.
+
+**Folie 10 – Fazit & Ausblick**
+- Was funktioniert heute bereits stabil?
+- Was haben wir gelernt?
+- Nächste Ausbaustufen (z. B. Payments, erweiterte Suche, Monitoring).
+
 ### Tipps für eine flüssige Präsentation (6.2)
 
 - Alle Befehle als Copy/Paste vorbereitet haben.
