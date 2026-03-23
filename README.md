@@ -146,11 +146,13 @@ Ziel: In 10 Minuten möglichst viele noch offene **Live-Demo-Kriterien** sauber 
 
 3. **Teil 3.4 – Backup/Restore**
    - Backup:
-     - `mongodump --db electroswap --out ./backup --username <user> --password <pw> --authenticationDatabase admin`
+     - `mongodump --db electroswap --out ./backup --username <user> --password --authenticationDatabase admin`
+     - Hinweis: Passwort wird interaktiv abgefragt (sicherer, kein Klartext im Befehl).
    - Kontrollierte Änderung:
      - Ein Produkt ändern/löschen.
    - Restore:
-     - `mongorestore --db electroswap --drop ./backup/electroswap --username <user> --password <pw> --authenticationDatabase admin`
+     - `mongorestore --db electroswap --drop ./backup/electroswap --username <user> --password --authenticationDatabase admin`
+     - Hinweis: Ebenfalls interaktive Passwortabfrage für die Demo einplanen.
    - Prüfen:
      - Produkt ist wieder in Originalzustand.
 
@@ -163,5 +165,5 @@ Ziel: In 10 Minuten möglichst viele noch offene **Live-Demo-Kriterien** sauber 
 
 - Alle Befehle als Copy/Paste vorbereitet haben.
 - Demo-Daten vorher fixieren (immer gleiche Produkt-ID verwenden).
-- Pro Abschnitt einen „Fallback“ haben (Screenshot oder vorbereitete Ausgabe), falls ein Schritt hakt.
+- Pro Abschnitt einen „Fallback“ haben (Screenshot oder vorbereitete Ausgabe), falls ein Schritt fehlschlägt.
 - Nicht zu viel erklären während Tippen: erst ausführen, dann kurz interpretieren.
