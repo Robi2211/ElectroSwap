@@ -161,14 +161,14 @@ Ziel: In 10 Minuten die **Applikation sichtbar zeigen** und gleichzeitig die noc
    - Mit Admin-User dasselbe Kommando erfolgreich ausführen.
 
 4. **Teil 3.4 – Backup/Restore**
-   - Backup:
-      - `mongodump --db electroswap --out ./backup --username <USERNAME> --password --authenticationDatabase admin`
-      - Hinweis: `<USERNAME>` durch euren DB-Benutzer ersetzen; Passwort wird interaktiv abgefragt (sicherer, kein Klartext im Befehl).
+    - Backup:
+       - `mongodump --db electroswap --out ./backup --username <USERNAME> --password --authenticationDatabase admin`
+       - Hinweis: `<USERNAME>` durch euren DB-Benutzer ersetzen; `--password` ohne Wert löst eine interaktive Passwortabfrage aus (sicherer, kein Klartext im Befehl und nicht in der Befehlshistorie).
    - Kontrollierte Änderung:
      - Ein Produkt ändern/löschen.
-   - Restore:
-      - `mongorestore --db electroswap --drop ./backup/electroswap --username <USERNAME> --password --authenticationDatabase admin`
-      - Hinweis: `<USERNAME>` ersetzen; ebenfalls interaktive Passwortabfrage für die Demo einplanen.
+    - Restore:
+       - `mongorestore --db electroswap --drop ./backup/electroswap --username <USERNAME> --password --authenticationDatabase admin`
+       - Hinweis: `<USERNAME>` ersetzen; auch hier löst `--password` ohne Wert eine interaktive Passwortabfrage aus (kein Passwort als Klartext im Befehl oder in der Befehlshistorie).
    - Prüfen:
      - Produkt ist wieder in Originalzustand.
 
@@ -218,8 +218,8 @@ Ziel: In 10 Minuten die **Applikation sichtbar zeigen** und gleichzeitig die noc
 - 1 Satz Einstieg: „Wir zeigen heute einen modernen Hardware-Shop inkl. Live-Demo und Datenbank-Setup.“
 
 **Folie 2 – Ziel der Arbeit**
-- Was wollten wir erreichen?  
-  → Einen funktionierenden E-Commerce-Prototyp mit realistischem User-Flow bauen.
+- Was wollten wir erreichen?
+- Einen funktionierenden E-Commerce-Prototyp mit realistischem User-Flow bauen.
 - Zusätzliches Ziel: zentrale LB2-Kriterien praktisch und live nachweisen.
 
 **Folie 3 – Problemstellung**
