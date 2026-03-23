@@ -4,7 +4,7 @@
 
 A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tailwind CSS** and **Alpine.js**. Designed with a premium dark theme inspired by Galaxus.ch/Digitec.ch.
 
-## 2.1 Projektidee und Entscheid für NoSQL
+## Projektidee und Entscheid für NoSQL (Kriterium 2.1)
 
 ElectroSwap ist eine E-Commerce-Plattform für Computer-Hardware und Elektronikkomponenten. Der Shop deckt mehrere Produktkategorien ab (z. B. CPU, GPU, SSD, Monitor, RAM, Motherboard, PSU, Case, Cooler, Peripherals), wobei jede Kategorie eigene technische Merkmale besitzt. Neben den Produkten werden auch Warenkörbe, Bestellungen und Reviews mit unterschiedlichen Attributen verwaltet.
 
