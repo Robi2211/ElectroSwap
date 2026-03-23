@@ -4,6 +4,12 @@
 
 A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tailwind CSS** and **Alpine.js**. Designed with a premium dark theme inspired by Galaxus.ch/Digitec.ch.
 
+## 2.1 Projektidee und Entscheid für NoSQL
+
+ElectroSwap ist eine E-Commerce-Plattform für Computer-Hardware und Elektronikkomponenten. Der Shop deckt mehrere Produktkategorien ab (z. B. CPU, GPU, SSD, Monitor, RAM, Motherboard, PSU, Case, Cooler, Peripherals), wobei jede Kategorie eigene technische Merkmale besitzt. Neben den Produkten werden auch Warenkörbe, Bestellungen und Reviews mit unterschiedlichen Attributen verwaltet.
+
+Die Wahl fiel auf eine NoSQL-Datenbank (MongoDB), weil die Datenstruktur flexibel ist und sich je nach Produktkategorie stark unterscheidet. Statt ein starres relationales Schema mit vielen optionalen Spalten zu erzwingen, können in MongoDB pro Dokument passende Felder gespeichert werden (z. B. `specs` je Kategorie). Dadurch bleibt das Modell erweiterbar, Änderungen an Attributen sind einfacher umsetzbar und die Entwicklung neuer Produkttypen ist ohne aufwendige Schema-Migrationen möglich.
+
 ## Tech Stack
 
 | Layer      | Technology                           |
