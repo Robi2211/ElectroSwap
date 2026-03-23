@@ -108,7 +108,7 @@ Wichtige Aktionen wie Produktsuche, Filterung, Warenkorb und Checkout sind logis
 Die ergonomische Qualität zeigt sich in:
 - klarer Seitenstruktur und visueller Hierarchie,
 - eindeutigen Beschriftungen und Call-to-Actions,
-- responsiver Darstellung für verschiedene Bildschirmgrössen,
+- responsiver Darstellung für verschiedene Bildschirmgrößen,
 - selbsterklärenden Formularen und Rückmeldungen (z. B. Warenkorb/Bestellung).
 
 Damit ist die Anwendung benutzerfreundlich und ohne lange Einarbeitung nutzbar.
