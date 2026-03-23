@@ -96,3 +96,35 @@ ElectroSwap/
 | 5.2 | Transactions | Checkout with `start_transaction()` + snapshot orders |
 | 5.5 | CRUD | Full CRUD on all collections |
 | 5.7 | Extra feature | Wishlist with move-to-cart
+
+## Präsentationsaufbau (ca. 10 Minuten)
+
+### 1) Einstieg & Ziel (ca. 1 Minute)
+- Kurz vorstellen: Projektname **ElectroSwap**
+- Ziel: Moderner Hardware-Webshop mit Fokus auf Usability und sauberer Datenstruktur
+
+### 2) Problemstellung & Anforderungen (ca. 1 Minute)
+- Welche Anforderungen sollten erfüllt werden? (Auth, Katalog, Warenkorb, Checkout, Admin)
+- Warum sind MongoDB und Flask für dieses Projekt passend?
+
+### 3) Architekturüberblick (ca. 2 Minuten)
+- Tech-Stack kurz erklären (Flask, MongoDB, Tailwind, Alpine.js)
+- Projektstruktur zeigen (Blueprints für auth, products, cart, orders, admin)
+- Hinweis auf App-Factory und zentrale Index-Erstellung
+
+### 4) Datenmodell & Collections (ca. 2 Minuten)
+- Die 6 Collections kurz erklären (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`)
+- Embedding vs. Referencing und warum jeweils gewählt
+- Beispiel: Flexible `specs` bei Produkten (heterogene Dokumente)
+
+### 5) Live-Demo Kernfunktionen (ca. 3 Minuten)
+- Login/Registrierung
+- Produkt suchen/filtern und Detailseite öffnen
+- Produkt in Warenkorb + optional Wunschliste
+- Checkout-Prozess und Bestellhistorie
+- (Optional) kurzer Blick ins Admin-Panel
+
+### 6) Fazit & Ausblick (ca. 1 Minute)
+- Wichtigste Learnings (Datenmodell, Transaktionen, UX)
+- Mögliche Erweiterungen (Payment, Versand, Empfehlungen)
+- Abschluss und Fragen
