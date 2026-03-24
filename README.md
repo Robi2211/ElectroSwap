@@ -39,6 +39,93 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `orders` | Order history with snapshot data | Snapshot principle (LB2 5.2) |
 | `reviews` | Product reviews (verified purchase) | Referencing |
 
+## BIM 2.3 – Attribute (Pflicht / Optional / Bedingung / Datentyp)
+
+### `users`
+
+| Attribut | Pflicht? | Datentyp | Bedingung / Regel |
+|---|---|---|---|
+| `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
+| `username` | Ja | `string` | Mindestens 3 Zeichen, eindeutig |
+| `email` | Ja | `string` | Muss `@` enthalten, eindeutig, wird lowercase gespeichert |
+| `password_hash` | Ja | `string` | bcrypt-Hash (kein Klartext-Passwort) |
+| `role` | Ja | `string` | `"customer"` oder `"admin"` |
+| `address` | Ja | `object` | Enthält Felder unten |
+| `address.street` | Ja (im Objekt) | `string` | Darf leer sein; bei Checkout muss Adresse vollständig sein |
+| `address.city` | Ja (im Objekt) | `string` | Darf leer sein; bei Checkout muss Adresse vollständig sein |
+| `address.zip_code` | Ja (im Objekt) | `string` | Darf leer sein; bei Checkout muss Adresse vollständig sein |
+| `address.country` | Ja (im Objekt) | `string` | Darf leer sein; bei Checkout muss Adresse vollständig sein |
+| `created_at` | Ja | `datetime` | UTC-Zeitstempel |
+
+### `products`
+
+| Attribut | Pflicht? | Datentyp | Bedingung / Regel |
+|---|---|---|---|
+| `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
+| `name` | Ja | `string` | Produktname |
+| `brand` | Ja | `string` | Hersteller/Marke |
+| `price` | Ja | `float` | Preis in CHF, wird auf 2 Dezimalen gerundet |
+| `category` | Ja | `string` | Erlaubte Kategorien: CPU, GPU, Monitor, Motherboard, PSU, RAM, Case, Storage, Cooling, Peripherals |
+| `stock_quantity` | Ja | `int` | Lagerbestand |
+| `images` | Ja | `array[string]` | Wenn leer, wird Placeholder-Bild gesetzt |
+| `description` | Ja | `string` | Beschreibung (kann leer sein) |
+| `specs` | Ja | `object` | Flexible, kategorieabhängige Attribute (heterogene Dokumente) |
+| `created_at` | Ja | `datetime` | UTC-Zeitstempel |
+
+### `baskets`
+
+| Attribut | Pflicht? | Datentyp | Bedingung / Regel |
+|---|---|---|---|
+| `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
+| `user_id` | Ja | `ObjectId` | Referenz auf `users._id` |
+| `items` | Ja | `array[object]` | Mindestens ein Eintrag beim Erstellen |
+| `items[].product_id` | Ja | `ObjectId` | Referenz auf `products._id` |
+| `items[].quantity` | Ja | `int` | Muss >= 1 sein |
+| `last_updated` | Ja | `datetime` | UTC-Zeitstempel |
+
+### `wishlists`
+
+| Attribut | Pflicht? | Datentyp | Bedingung / Regel |
+|---|---|---|---|
+| `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
+| `user_id` | Ja | `ObjectId` | Referenz auf `users._id` |
+| `name` | Optional | `string` | Standardwert beim Erstellen: `"My Wishlist"` |
+| `items` | Ja | `array[object]` | Liste gespeicherter Produkte |
+| `items[].product_id` | Ja | `ObjectId` | Referenz auf `products._id` |
+| `items[].added_at` | Optional | `datetime` | UTC-Zeitstempel (wird beim Hinzufügen gesetzt) |
+
+### `orders`
+
+| Attribut | Pflicht? | Datentyp | Bedingung / Regel |
+|---|---|---|---|
+| `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
+| `user_id` | Ja | `ObjectId` | Referenz auf `users._id` |
+| `order_date` | Ja | `datetime` | UTC-Zeitstempel |
+| `total_price` | Ja | `float` | Gesamtsumme der Bestellung |
+| `status` | Ja | `string` | Initial `"confirmed"`, Admin kann Status ändern |
+| `shipping_address` | Ja | `object` | Muss beim Checkout vollständig ausgefüllt sein |
+| `shipping_address.street` | Ja | `string` | Nicht leer bei Checkout |
+| `shipping_address.city` | Ja | `string` | Nicht leer bei Checkout |
+| `shipping_address.zip_code` | Ja | `string` | Nicht leer bei Checkout |
+| `shipping_address.country` | Ja | `string` | Nicht leer bei Checkout |
+| `order_items` | Ja | `array[object]` | Snapshot-Prinzip (Werte zum Kaufzeitpunkt) |
+| `order_items[].product_id` | Ja | `ObjectId` | Referenz auf `products._id` |
+| `order_items[].name_at_purchase` | Ja | `string` | Name zum Kaufzeitpunkt |
+| `order_items[].price_at_purchase` | Ja | `float` | Preis zum Kaufzeitpunkt |
+| `order_items[].quantity` | Ja | `int` | Anzahl pro Position |
+
+### `reviews`
+
+| Attribut | Pflicht? | Datentyp | Bedingung / Regel |
+|---|---|---|---|
+| `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
+| `product_id` | Ja | `ObjectId` | Referenz auf `products._id` |
+| `user_id` | Ja | `ObjectId` | Referenz auf `users._id` |
+| `rating` | Ja | `int` | Wertebereich 1–5 |
+| `comment` | Optional | `string` | Freitext |
+| `verified_purchase` | Optional | `bool` | In App-Flow immer `true`; Review nur nach Kauf erlaubt |
+| `created_at` | Ja | `datetime` | UTC-Zeitstempel |
+
 ## Quick Start
 
 ```bash
