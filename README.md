@@ -47,7 +47,7 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 |---|---|---|---|
 | `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
 | `username` | Ja | `string` | Mindestens 3 Zeichen, eindeutig |
-| `email` | Ja | `string` | Muss `@` enthalten, eindeutig, wird lowercase gespeichert |
+| `email` | Ja | `string` | Eindeutig, wird lowercase gespeichert; aktuelle App-Validierung prüft mindestens auf `@` |
 | `password_hash` | Ja | `string` | bcrypt-Hash (kein Klartext-Passwort) |
 | `role` | Ja | `string` | `"customer"` oder `"admin"` |
 | `address` | Ja | `object` | Enthält Felder unten |
@@ -64,7 +64,7 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
 | `name` | Ja | `string` | Produktname |
 | `brand` | Ja | `string` | Hersteller/Marke |
-| `price` | Ja | `float` | Preis in CHF, wird auf 2 Dezimalen gerundet |
+| `price` | Ja | `float` | Aktuell als `float` in CHF implementiert (auf 2 Dezimalen gerundet) |
 | `category` | Ja | `string` | Erlaubte Kategorien: CPU, GPU, Monitor, Motherboard, PSU, RAM, Case, Storage, Cooling, Peripherals |
 | `stock_quantity` | Ja | `int` | Lagerbestand |
 | `images` | Ja | `array[string]` | Wenn leer, wird Placeholder-Bild gesetzt |
@@ -101,7 +101,7 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `_id` | Ja | `ObjectId` | Automatisch von MongoDB |
 | `user_id` | Ja | `ObjectId` | Referenz auf `users._id` |
 | `order_date` | Ja | `datetime` | UTC-Zeitstempel |
-| `total_price` | Ja | `float` | Gesamtsumme der Bestellung |
+| `total_price` | Ja | `float` | Aktuell als `float` in CHF implementiert; Gesamtsumme der Bestellung |
 | `status` | Ja | `string` | Initial `"confirmed"`, Admin kann Status ändern |
 | `shipping_address` | Ja | `object` | Muss beim Checkout vollständig ausgefüllt sein |
 | `shipping_address.street` | Ja | `string` | Nicht leer bei Checkout |
@@ -111,7 +111,7 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 | `order_items` | Ja | `array[object]` | Snapshot-Prinzip (Werte zum Kaufzeitpunkt) |
 | `order_items[].product_id` | Ja | `ObjectId` | Referenz auf `products._id` |
 | `order_items[].name_at_purchase` | Ja | `string` | Name zum Kaufzeitpunkt |
-| `order_items[].price_at_purchase` | Ja | `float` | Preis zum Kaufzeitpunkt |
+| `order_items[].price_at_purchase` | Ja | `float` | Aktuell als `float`; Snapshot-Preis zum Kaufzeitpunkt |
 | `order_items[].quantity` | Ja | `int` | Anzahl pro Position |
 
 ### `reviews`
