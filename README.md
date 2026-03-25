@@ -19,15 +19,15 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 
 **Was auf die Folie kann (kurz & klar):**
 - **Frontend:** Jinja2 Templates, Tailwind CSS v3, Alpine.js (interaktive UI ohne schweres Frontend-Framework)
-- **Backend:** Python 3.11+ mit Flask und Blueprints (modulare Route-Struktur)
+- **Backend:** Python 3.11+ mit Flask und Blueprints (**kein Node.js / Express**)
 - **Datenbank:** MongoDB mit PyMongo, Text-Index für Suche, Transaktionen im Checkout
-- **Sicherheit & Qualität:** Flask-Login, bcrypt (Passwort-Hashing), Flask-WTF (CSRF-Schutz)
+- **Sonstige Technologien:** Flask-Login, bcrypt (Passwort-Hashing), Flask-WTF (CSRF-Schutz), Font Awesome
 
 **Was du dazu sagen kannst (Sprechtext):**
-> „Wir haben bewusst einen pragmatischen Full-Stack gewählt: Im Backend nutzen wir Flask mit Blueprints, damit die Applikation sauber in Module wie Auth, Produkte, Warenkorb und Bestellungen aufgeteilt ist.  
+> „Wir haben bewusst einen pragmatischen Full-Stack gewählt: Im Backend nutzen wir Python mit Flask und Blueprints – also **kein Node.js**, sondern eine klar strukturierte Flask-Architektur für Module wie Auth, Produkte, Warenkorb und Bestellungen.  
 > Im Frontend kombinieren wir serverseitige Jinja2-Templates mit Tailwind CSS für ein konsistentes Design und Alpine.js für leichte Interaktivität.  
 > Als Datenbank verwenden wir MongoDB, weil sich unsere Produktdaten je nach Kategorie stark unterscheiden und wir mit flexiblen Dokumenten gut arbeiten können.  
-> Zusätzlich setzen wir auf wichtige Sicherheitsbausteine wie bcrypt für Passwörter, Flask-Login für Sessions und CSRF-Schutz über Flask-WTF.  
+> Bei den sonstigen Technologien setzen wir auf wichtige Sicherheitsbausteine wie bcrypt für Passwörter, Flask-Login für Sessions und CSRF-Schutz über Flask-WTF.  
 > Für die Performance und Zuverlässigkeit nutzen wir Indizes für die Suche und Transaktionen im Checkout, damit Lagerbestand und Bestellungen konsistent bleiben.“
 
 ## Features
