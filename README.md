@@ -130,7 +130,7 @@ Für die Doku/Präsentation sind diese Screenshots am aussagekräftigsten:
 
 2. **Produktübersicht mit Filtern/Suche**  
    **Warum dieser Screenshot wichtig ist:** Hier wird Ergonomie sichtbar, weil User viele Produkte schnell eingrenzen können.  
-   **Was du in der Doku dazu schreiben kannst:** „Die Katalogseite priorisiert effiziente Produktsuche durch Filter, Sortierung und Suchfunktion. Dadurch werden kognitive Last und Klickwege reduziert, besonders bei grossen Produktmengen.“
+   **Was du in der Doku dazu schreiben kannst:** „Die Katalogseite priorisiert effiziente Produktsuche durch Filter, Sortierung und Suchfunktion. Dadurch werden kognitive Last und Klickwege reduziert, besonders bei großen Produktmengen.“
 
 3. **Produktdetailseite**  
    **Warum dieser Screenshot wichtig ist:** Er belegt, dass Informationen strukturiert und entscheidungsrelevant aufbereitet sind (Preis, Spezifikationen, Verfügbarkeit, Bewertung, Kaufaktion).  
