@@ -102,7 +102,7 @@ ElectroSwap/
 ### 5.5 Voll ausgebaute Applikation
 
 **Alle Entitätsmengen vorhanden (MongoDB Collections):**
-- `users` (Benutzerkonten + Adresse)
+- `users` (Benutzerkonten + Adressen)
 - `products` (Katalog mit dynamischen Specs)
 - `baskets` (Warenkorb)
 - `wishlists` (Merkliste)
@@ -133,7 +133,7 @@ ElectroSwap/
 ### 5.6 Professionelles Design und intuitive Bedienung (Voraussetzung 5.5)
 
 **Design-Umsetzung:**
-- Einheitliches, professionelles UI mit Tailwind CSS + klarer Farbpalette (Dark Theme)
+- Einheitliches, professionelles User Interface mit Tailwind CSS + klarer Farbpalette (Dark Theme)
 - Konsistentes Layout über alle Seiten (gemeinsame Basis-Template-Struktur)
 - Visuelle Hierarchie mit Karten, Abständen, Icons und Statusfarben (Success/Error/Info)
 
