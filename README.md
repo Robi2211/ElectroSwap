@@ -91,7 +91,7 @@ ElectroSwap ist als Fullstack-Webapplikation mit **serverseitigem Rendering** um
 
 ### Frontend
 
-Das Frontend wird über **Jinja2-Templates** (`app/templates/**`) gerendert.  
+Das Frontend wird über **Jinja2-Templates** (im Verzeichnis `app/templates/` inkl. Unterordnern) gerendert.  
 Für das UI kommen **Tailwind CSS** und **Alpine.js** zum Einsatz:
 
 - Tailwind CSS für ein konsistentes, responsives Design
@@ -115,11 +115,11 @@ Sicherheitsrelevante Bausteine sind:
 
 ### Datenbankkonfiguration
 
-Die MongoDB-Verbindung wird über `MONGO_URI` konfiguriert und standardmässig auf eine lokale Instanz gesetzt:
+Die MongoDB-Verbindung wird über `MONGO_URI` konfiguriert und standardmäßig auf eine lokale Instanz gesetzt:
 
 `mongodb://localhost:27017/electroswap`
 
-Der Datenbankname wird aus der URI abgeleitet (`app/__init__.py`). Beim Start werden zudem zentrale Indexe automatisch erstellt (`_ensure_indexes()`), z. B. für `users.email`, `products`-Suche und `reviews`-Eindeutigkeit pro Nutzer/Produkt.
+Der Datenbankname wird aus der URI abgeleitet (`app/__init__.py`). Beim Start werden zudem zentrale Indexe automatisch erstellt (`_ensure_indexes()` in `app/__init__.py`), z. B. für `users.email`, `products`-Suche und `reviews`-Eindeutigkeit pro Nutzer/Produkt.
 
 ### Wichtige Routen (Web-Endpunkte)
 
