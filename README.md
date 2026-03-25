@@ -58,6 +58,20 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 > Mit Replikation stellen wir sicher, dass bei einem Ausfall ein anderer Knoten übernimmt und die Anwendung weiterläuft.  
 > Und mit regelmäßigen Backups können wir Daten nach Fehlern oder Bedienfehlern zuverlässig wiederherstellen.“
 
+### Präsentationshilfe: Folie „Fazit“
+
+**Was auf die Folie kann (kurz & klar):**
+- **Ziel erreicht:** ElectroSwap bildet einen vollständigen E-Commerce-Flow ab – von Produktkatalog bis Bestellung.
+- **Technisch passend:** Flask + MongoDB ermöglichen eine klare Architektur und flexible Produktdaten.
+- **Betriebssicher:** Indizes, Transaktionen, Replikation und Backups erhöhen Zuverlässigkeit und Stabilität.
+- **Ausbaufähig:** Das System ist eine solide Basis für weitere Features und Skalierung.
+
+**Was du dazu sagen kannst (Sprechtext):**
+> „Zusammengefasst haben wir mit ElectroSwap eine funktionale und praxisnahe Shop-Applikation umgesetzt, die sowohl fachlich als auch technisch überzeugt.  
+> Die Kombination aus Flask und MongoDB passt sehr gut zu unseren Anforderungen, weil sie Struktur und Flexibilität verbindet.  
+> Gleichzeitig haben wir auf wichtige Qualitätsmerkmale wie Konsistenz, Performance und Ausfallsicherheit geachtet.  
+> Damit ist das Projekt nicht nur für die Abgabe geeignet, sondern auch eine starke Grundlage für zukünftige Erweiterungen.“
+
 ## Features
 
 - **User Authentication** – Register, login, logout, profile with address editing
