@@ -85,6 +85,75 @@ ElectroSwap/
 └── requirements.txt
 ```
 
+## Technologie / Aufbau der Applikation (ausformuliert)
+
+ElectroSwap ist als Fullstack-Webapplikation mit **serverseitigem Rendering** umgesetzt. Im Gegensatz zu einer getrennten SPA-/API-Architektur liegt die Anwendung als Flask-Projekt in einem gemeinsamen Codebestand vor: Request-Handling (Blueprints), Business-Logik, Datenzugriff und HTML-Rendering arbeiten eng zusammen.
+
+### Frontend
+
+Das Frontend wird über **Jinja2-Templates** (`app/templates/**`) gerendert.  
+Für das UI kommen **Tailwind CSS** und **Alpine.js** zum Einsatz:
+
+- Tailwind CSS für ein konsistentes, responsives Design
+- Alpine.js für leichte Interaktivität (z. B. UI-States)
+- Serverseitiges Rendering für Seiten wie Katalog, Produktdetail, Warenkorb, Checkout und Admin
+
+### Backend
+
+Das Backend basiert auf **Python 3.11+ und Flask**. Die Struktur folgt einem MVC-ähnlichen Ansatz:
+
+- **Controller/Logik:** Flask-Blueprints in `app/*/routes.py` (z. B. `auth`, `products`, `cart`, `orders`, `admin`)
+- **Model/Datenzugriff:** MongoDB-Collections über **PyMongo**
+- **View/Darstellung:** Jinja2-Templates
+
+Zusätzlich wird das **Application-Factory-Pattern** verwendet (`create_app()` in `app/__init__.py`).  
+Sicherheitsrelevante Bausteine sind:
+
+- **Flask-Login** (Session-Management, Rollenprüfung)
+- **bcrypt** (Passwort-Hashing)
+- **Flask-WTF / CSRFProtect** (CSRF-Schutz bei Formularen)
+
+### Datenbankkonfiguration
+
+Die MongoDB-Verbindung wird über `MONGO_URI` konfiguriert und standardmässig auf eine lokale Instanz gesetzt:
+
+`mongodb://localhost:27017/electroswap`
+
+Der Datenbankname wird aus der URI abgeleitet (`app/__init__.py`). Beim Start werden zudem zentrale Indexe automatisch erstellt (`_ensure_indexes()`), z. B. für `users.email`, `products`-Suche und `reviews`-Eindeutigkeit pro Nutzer/Produkt.
+
+### Wichtige Routen (Web-Endpunkte)
+
+> Hinweis: ElectroSwap nutzt primär serverseitige Web-Routen (keine separate `/api/...`-JWT-API).
+
+| Bereich | Zugriff | Methode | Route | Beschreibung |
+|---|---|---|---|---|
+| Main | Public | GET | `/` | Startseite mit Featured Products |
+| Auth | Public | GET/POST | `/auth/register` | Benutzer registrieren |
+| Auth | Public | GET/POST | `/auth/login` | Benutzer einloggen |
+| Auth | Login | GET | `/auth/logout` | Benutzer ausloggen |
+| Auth | Login | GET/POST | `/auth/profile` | Profil/Adresse verwalten |
+| Products | Public | GET | `/products/` | Katalog mit Suche, Filter, Sortierung |
+| Products | Public | GET | `/products/<product_id>` | Produktdetail inkl. Reviews |
+| Cart | Login | GET | `/cart/` | Warenkorb anzeigen |
+| Cart | Login | POST | `/cart/add/<product_id>` | Produkt zum Warenkorb hinzufügen |
+| Cart | Login | POST | `/cart/update/<product_id>` | Menge aktualisieren |
+| Cart | Login | POST | `/cart/remove/<product_id>` | Produkt entfernen |
+| Wishlist | Login | GET | `/wishlist/` | Wunschliste anzeigen |
+| Wishlist | Login | POST | `/wishlist/add/<product_id>` | Zur Wunschliste hinzufügen |
+| Wishlist | Login | POST | `/wishlist/remove/<product_id>` | Aus Wunschliste entfernen |
+| Wishlist | Login | POST | `/wishlist/move-to-cart/<product_id>` | In Warenkorb verschieben |
+| Orders | Login | GET | `/orders/` | Bestellhistorie |
+| Orders | Login | GET | `/orders/<order_id>` | Bestelldetail |
+| Orders | Login | GET/POST | `/orders/checkout` | Checkout-Prozess |
+| Reviews | Login | POST | `/reviews/add/<product_id>` | Bewertung (Verified Purchase) |
+| Admin | Admin | GET | `/admin/` | Dashboard |
+| Admin | Admin | GET | `/admin/products` | Produktverwaltung |
+| Admin | Admin | GET/POST | `/admin/products/create` | Produkt erstellen |
+| Admin | Admin | GET/POST | `/admin/products/edit/<product_id>` | Produkt bearbeiten |
+| Admin | Admin | POST | `/admin/products/delete/<product_id>` | Produkt löschen |
+| Admin | Admin | GET | `/admin/orders` | Bestellungen verwalten |
+| Admin | Admin | POST | `/admin/orders/<order_id>/status` | Bestellstatus aktualisieren |
+
 ## LB2 Criteria Coverage
 
 | Criterion | Description | Implementation |
