@@ -20,11 +20,11 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 **Was auf die Folie kann (kurz & klar):**
 - **Frontend:** Jinja2 Templates, Tailwind CSS v3, Alpine.js (interaktive UI ohne schweres Frontend-Framework)
 - **Backend:** Python 3.11+ mit Flask und Blueprints (**kein Node.js / Express**)
-- **Datenbank:** MongoDB mit PyMongo, Text-Index für Suche, Transaktionen im Checkout
+- **Datenbank:** MongoDB mit PyMongo, Textindex für Suche, Transaktionen im Checkout
 - **Sonstige Technologien:** Flask-Login, bcrypt (Passwort-Hashing), Flask-WTF (CSRF-Schutz), Font Awesome
 
 **Was du dazu sagen kannst (Sprechtext):**
-> „Wir haben bewusst einen pragmatischen Full-Stack gewählt: Im Backend nutzen wir Python mit Flask und Blueprints – also **kein Node.js**, sondern eine klar strukturierte Flask-Architektur für Module wie Auth, Produkte, Warenkorb und Bestellungen.  
+> „Wir haben bewusst einen pragmatischen Full-Stack gewählt: Im Backend nutzen wir Python mit Flask und Blueprints, weil diese Architektur für unsere Module wie Auth, Produkte, Warenkorb und Bestellungen sehr klar und wartbar ist.  
 > Im Frontend kombinieren wir serverseitige Jinja2-Templates mit Tailwind CSS für ein konsistentes Design und Alpine.js für leichte Interaktivität.  
 > Als Datenbank verwenden wir MongoDB, weil sich unsere Produktdaten je nach Kategorie stark unterscheiden und wir mit flexiblen Dokumenten gut arbeiten können.  
 > Bei den sonstigen Technologien setzen wir auf wichtige Sicherheitsbausteine wie bcrypt für Passwörter, Flask-Login für Sessions und CSRF-Schutz über Flask-WTF.  
@@ -33,7 +33,7 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 ### Präsentationshilfe: Folie „Warum MongoDB und nicht eine andere Datenbank?“
 
 **Was auf die Folie kann (kurz & klar):**
-- **Flexible Produktdaten:** Jede Kategorie (CPU, GPU, Monitor) hat andere technische Attribute. MongoDB erlaubt ein dynamisches `specs`-Feld ohne starres Tabellen-Schema.
+- **Flexible Produktdaten:** Jede Kategorie (CPU, GPU, Monitor) hat andere technische Attribute. MongoDB erlaubt ein dynamisches `specs`-Feld ohne starres Tabellenschema.
 - **Schnelle Entwicklung:** Weniger Schema-Migrationen bei neuen Produkttypen oder zusätzlichen Feldern.
 - **Passend zum Datenmodell:** Kombination aus Embedding und Referencing (z. B. `users` mit Adresse eingebettet, `orders`/`reviews` referenziert) ist in MongoDB sehr natürlich.
 - **Leistung & Zuverlässigkeit:** Indizes für Suche/Filter und Transaktionen im Checkout für konsistente Bestellungen.
