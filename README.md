@@ -96,3 +96,45 @@ ElectroSwap/
 | 5.2 | Transactions | Checkout with `start_transaction()` + snapshot orders |
 | 5.5 | CRUD | Full CRUD on all collections |
 | 5.7 | Extra feature | Wishlist with move-to-cart
+
+## 4.4 GUI, Ergonomie, Design (Dokumentationstext)
+
+Für **GUI und Ergonomie** haben wir auf eine klare, moderne Shop-Oberfläche gesetzt:
+
+- **Konsistente Navigation**: Oben fixe Navigation mit klaren Einstiegen (Shop, Wishlist, Cart, Login/Profil/Admin).
+- **Klare visuelle Hierarchie**: Hero-Bereich, Produktkarten, Preis/CTA und Formulare mit eindeutigen Prioritäten.
+- **Lesbarkeit im Dark Mode**: Hoher Kontrast zwischen Hintergrund, Karten und Text für längere Nutzung.
+- **Direktes Feedback**: Flash-Messages, Hover-States und gut sichtbare Buttons für sichere Interaktion.
+- **Responsives Layout**: Mobile-first mit Tailwind (z. B. adaptive Grids, saubere Abstände, skalierende Typografie).
+
+### Verwendetes Farbschema
+
+Das Design basiert auf einem dunklen Premium-Look mit Akzentfarben für Interaktion und Branding:
+
+| Rolle | Farbwert |
+|---|---|
+| Primärer Akzent (Gelb) | `#facc15` |
+| Sekundärer Akzent (Blau) | `#3b82f6` |
+| Hintergrund dunkel | `#0f0f1a` |
+| Karten-Hintergrund | `#1a1a2e` |
+| Flächen/Layer | `#16162a` |
+| Border/Trennlinien | `#2a2a4a` |
+
+### Welche Screenshots am besten einfügen?
+
+Für die Doku/Präsentation sind diese Screenshots am aussagekräftigsten:
+
+1. **Startseite mit Hero**  
+   Zeigt Branding, Typografie, Farbverlauf und ersten visuellen Eindruck.
+2. **Produktübersicht mit Filtern/Suche**  
+   Zeigt Ergonomie im Alltag: schnelle Orientierung, Sortierung, Sidebar-Filter.
+3. **Produktdetailseite**  
+   Zeigt Informationsstruktur (Bilder, Specs, Preis, CTA, Reviews).
+4. **Warenkorb + Checkout-Schritt**  
+   Zeigt klare User Journey und reduzierte Komplexität beim Kaufprozess.
+5. **Login/Registrierung**  
+   Zeigt Formular-Ergonomie (Labels, Fokus, klare Eingaben).
+6. **Admin-Dashboard (optional)**  
+   Zeigt, dass das Design auch im Backoffice konsistent bleibt.
+
+Tipp: Wenn nur 2–3 Screenshots möglich sind, nimm **Startseite**, **Produktübersicht** und **Produktdetailseite**.
