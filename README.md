@@ -89,6 +89,14 @@ ElectroSwap/
 
 ElectroSwap ist als Fullstack-Webapplikation mit **serverseitigem Rendering** umgesetzt. Im Gegensatz zu einer getrennten SPA-/API-Architektur liegt die Anwendung als Flask-Projekt in einem gemeinsamen Codebestand vor: Request-Handling (Blueprints), Business-Logik, Datenzugriff und HTML-Rendering arbeiten eng zusammen.
 
+### Aufgabenbezug (2.1)
+
+**Beschreiben Sie die Technologien, die Sie einsetzen und begründen Sie Ihre Wahl.**  
+Für ElectroSwap werden Python 3.11 + Flask, MongoDB + PyMongo, Jinja2, Tailwind CSS + Alpine.js sowie Flask-Login, bcrypt und CSRF-Schutz eingesetzt. Die Wahl wurde getroffen, weil diese Kombination eine schnelle Entwicklung, flexible Dokumentstrukturen für unterschiedliche Produktdaten, wartbare serverseitige Oberflächen und solide Sicherheitsmechanismen für ein E-Commerce-Projekt ermöglicht.
+
+**Beschreiben Sie den Aufbau Ihrer Applikation: Struktur des Codes / der Dateien, evtl. Entwurfsmuster (MVC, MVP, MVVM, usw.).**  
+ElectroSwap ist modular nach fachlichen Bereichen in Blueprints strukturiert (`app/auth`, `app/products`, `app/cart`, `app/wishlist`, `app/orders`, `app/reviews`, `app/admin`) und folgt einem MVC-ähnlichen Aufbau: Controller in `routes.py`, Datenzugriff über MongoDB/PyMongo (Model-Ebene) und Darstellung über Jinja2-Templates (View-Ebene). Zusätzlich wird das Application-Factory-Pattern in `app/__init__.py` genutzt.
+
 ### Frontend
 
 Das Frontend wird über **Jinja2-Templates** (im Verzeichnis `app/templates/` inkl. Unterordnern) gerendert.  
