@@ -116,3 +116,28 @@ Die Anforderung 5.6 ist erfüllt, weil die Oberfläche ein konsistentes und prof
 Die Bedienung ist intuitiv, weil Nutzer über die Hauptnavigation sofort zu den wichtigsten Bereichen gelangen und mobile Nutzer ein separates Menü mit denselben Kernfunktionen erhalten. Zusätzlich reduziert die Rollenlogik Komplexität: normale Benutzer sehen Shop-Funktionen, Admins erhalten ergänzend den Verwaltungsbereich. Nach Aktionen wie „Produkt aktualisiert“ oder „Bestellung abgeschlossen“ geben Flash-Meldungen sofort verständliches Feedback. **Screenshot einfügen:** Navigation (Desktop oder Mobile) und eine sichtbare Flash-Meldung nach einer Aktion. **Optionales Video (20–30 Sek.):** Login als User vs. Login als Admin, um unterschiedliche Menüpunkte zu demonstrieren.
 
 Auch die zentralen Benutzerpfade sind ohne Umwege aufgebaut: suchen/filtern im Katalog, Produktdetails ansehen, in Cart oder Wishlist legen, Checkout ausführen und anschließend den Bestellverlauf prüfen. Diese lineare Führung reduziert Fehlbedienung und entspricht dem Verhalten professioneller Shop-Systeme. **Screenshot einfügen:** Sequenz aus 3 Bildern (Katalogfilter → Warenkorb → Bestellverlauf). **Optionales Video (30 Sek.):** kompletter End-to-End-Flow aus Nutzersicht.
+
+### Was wir uns bei 5.5 / 5.6 konkret gedacht haben (für die Doku so formulierbar)
+
+- **Warum „voll ausgebaut“?**  
+  Unser Ziel war nicht eine einzelne Demo-Seite, sondern ein kompletter Shop-Flow mit echten Rollen und klarer Trennung zwischen Customer- und Admin-Bereich. Darum haben wir alle zentralen Schritte umgesetzt: Konto erstellen, Produkte finden, kaufen, Bestellung nachverfolgen und als Admin verwalten.
+
+- **Warum genau diese Entitätsmengen?**  
+  Die sechs Collections (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`) bilden die realen Verantwortungen eines Shops ab. So bleibt die Datenstruktur verständlich: Produktdaten bleiben im Katalog, Warenkorb/Wishlist sind nutzerbezogen, Bestellungen speichern den Kaufzustand (Snapshot), Reviews sind separat, damit Bewertungen unabhängig vom Produktdatensatz gepflegt werden können.
+
+- **Warum Indexe? Haben wir sie überhaupt?**  
+  Ja, wir haben sie implementiert (siehe `app/__init__.py`, Funktion `_ensure_indexes()`). Die Überlegung war: häufige Abfragen (Suche/Filter/Benutzerbezug) müssen schnell sein, und kritische Felder brauchen Integrität. Deshalb:  
+  - `users.email` **unique** (kein doppelter Account)  
+  - `products.category`, `products.brand`, `products.price` (schnelle Filterung)  
+  - Textindex auf `products.name`, `products.description`, `products.brand` (Produktsuche)  
+  - `baskets.user_id` **unique**, `wishlists.user_id`, `orders.user_id` (schneller Zugriff pro User)  
+  - `reviews(product_id, user_id)` **unique** (ein User bewertet ein Produkt nur einmal)
+
+- **Wie wir die Screenshots begründen (nicht zufällig, sondern mit Aussage):**  
+  Jeder Screenshot soll immer direkt zeigen, **welche Anforderung** er belegt.
+  1. **Collections-Übersicht (MongoDB Compass):** zeigt, dass alle Entitätsmengen real vorhanden sind.  
+  2. **Code `_ensure_indexes()`:** zeigt, dass Indexe technisch definiert sind und nicht nur behauptet werden.  
+  3. **Katalog mit Suche/Filter:** zeigt, warum die Produktindexe sinnvoll sind (Anwendungsfall).  
+  4. **Admin-Formular (Produkt bearbeiten/löschen):** zeigt „einfügen/ändern“ im Backoffice.  
+  5. **Warenkorb mit Mengenänderung + Checkout + Bestellverlauf:** zeigt den vollständigen Mehrseiten-Flow für 5.5.  
+  6. **Navigation + Flash-Meldung:** zeigt intuitive Bedienung und direktes Feedback (5.6).
