@@ -85,6 +85,75 @@ ElectroSwap/
 └── requirements.txt
 ```
 
+## Technologie / Aufbau der Applikation (ausformuliert)
+
+ElectroSwap ist als serverseitig gerenderte Fullstack-Webapplikation umgesetzt und folgt einer klaren Trennung von fachlichen Modulen im Backend sowie einer strukturierten Template-Ebene im Frontend. Die Anwendung wird in `app/` über Flask-Blueprints organisiert (z. B. `auth`, `products`, `cart`, `orders`, `reviews`, `admin`). Dadurch können einzelne Funktionsbereiche unabhängig erweitert und gewartet werden.
+
+### Backend
+
+Das Backend basiert auf **Python 3.11+** und **Flask**. Flask wurde gewählt, weil das Framework leichtgewichtig ist und sich sehr gut modular mit Blueprints strukturieren lässt.  
+Die Initialisierung erfolgt über das **Application-Factory-Pattern** (`create_app()` in `app/__init__.py`). Damit bleiben Konfiguration, Extension-Setup (Login, CSRF, MongoDB), Index-Erstellung und Registrierung der Blueprints sauber voneinander getrennt.
+
+Sicherheits- und Benutzerverwaltungsfunktionen:
+
+- **Flask-Login** für Session-Management und geschützte Bereiche
+- **bcrypt** für sicheres Hashing von Passwörtern
+- **Flask-WTF / CSRFProtect** zum Schutz vor CSRF-Angriffen in Formularen
+
+### Frontend
+
+Das Frontend wird serverseitig mit **Jinja2** gerendert. Dieses Rendering-Modell passt zum Projekt, da Produktkatalog, Detailseiten, Warenkorb, Checkout und Admin-Masken direkt aus den Backend-Daten aufgebaut werden können.  
+Für das UI werden **Tailwind CSS** und **Alpine.js** verwendet:
+
+- **Tailwind CSS** für konsistente, responsive und schnell anpassbare Oberflächen
+- **Alpine.js** für leichte Interaktivität (z. B. UI-Zustände), ohne ein schweres SPA-Framework
+
+### Datenhaltung (MongoDB)
+
+Die Datenhaltung erfolgt über **MongoDB** mit **PyMongo**. MongoDB ist geeignet, weil Produktdaten je nach Kategorie unterschiedliche technische Eigenschaften enthalten und flexibel im Feld `specs` gespeichert werden können.  
+Der Datenbankzugriff wird über `MONGO_URI` konfiguriert (Standard in der App: `mongodb://localhost:27017/electroswap`), kann aber per Umgebungsvariable für andere Umgebungen überschrieben werden.
+
+Zusätzlich gibt es mit `seed_data.py` einen Seed-Mechanismus, um Demo-Daten für Entwicklung und Präsentation schnell bereitzustellen.
+
+### Architekturansatz (MVC-ähnlich)
+
+Die Anwendung folgt einem praxisnahen **MVC-ähnlichen Aufbau**:
+
+- **Model (Datenebene):** MongoDB-Collections und Datenzugriffe via PyMongo (`users`, `products`, `baskets`, `wishlists`, `orders`, `reviews`)
+- **Controller (Logik):** Flask-Blueprint-Routen in `app/*/routes.py` validieren Eingaben, steuern Geschäftslogik und Datenbankoperationen
+- **View (Darstellung):** Jinja2-Templates in `app/templates/**` rendern die HTML-Oberfläche
+
+### API-Anfragen / Routenübersicht
+
+| Bereich | Zugriff | Methode | Endpoint | Beschreibung |
+|---|---|---|---|---|
+| Main | Public | GET | `/` | Startseite mit Featured-Produkten |
+| Auth | Public | GET/POST | `/auth/register` | Registrierung eines Benutzers |
+| Auth | Public | GET/POST | `/auth/login` | Login |
+| Auth | Login | GET | `/auth/logout` | Logout |
+| Auth | Login | GET/POST | `/auth/profile` | Profil inkl. Adressverwaltung |
+| Products | Public | GET | `/products/` | Produktkatalog mit Suche, Filter, Sortierung |
+| Products | Public | GET | `/products/<product_id>` | Produktdetailseite |
+| Cart | Login | GET | `/cart/` | Warenkorb anzeigen |
+| Cart | Login | POST | `/cart/add/<product_id>` | Produkt zum Warenkorb hinzufügen |
+| Cart | Login | POST | `/cart/update/<product_id>` | Menge im Warenkorb ändern |
+| Cart | Login | POST | `/cart/remove/<product_id>` | Produkt aus Warenkorb entfernen |
+| Wishlist | Login | GET | `/wishlist/` | Wunschliste anzeigen |
+| Wishlist | Login | POST | `/wishlist/add/<product_id>` | Produkt zur Wunschliste hinzufügen |
+| Wishlist | Login | POST | `/wishlist/remove/<product_id>` | Produkt aus Wunschliste entfernen |
+| Wishlist | Login | POST | `/wishlist/move-to-cart/<product_id>` | Produkt von Wunschliste in Warenkorb verschieben |
+| Orders | Login | GET | `/orders/` | Bestellhistorie |
+| Orders | Login | GET | `/orders/<order_id>` | Bestelldetail |
+| Orders | Login | GET/POST | `/orders/checkout` | Checkout mit Bestandsprüfung und Bestellung |
+| Reviews | Login | POST | `/reviews/add/<product_id>` | Bewertung (nur bei verifiziertem Kauf) |
+| Admin | Admin | GET | `/admin/` | Dashboard mit Kennzahlen |
+| Admin | Admin | GET | `/admin/products` | Produktverwaltung |
+| Admin | Admin | GET/POST | `/admin/products/create` | Produkt erstellen |
+| Admin | Admin | GET/POST | `/admin/products/edit/<product_id>` | Produkt bearbeiten |
+| Admin | Admin | POST | `/admin/products/delete/<product_id>` | Produkt löschen |
+| Admin | Admin | GET | `/admin/orders` | Bestellverwaltung |
+| Admin | Admin | POST | `/admin/orders/<order_id>/status` | Bestellstatus ändern |
+
 ## LB2 Criteria Coverage
 
 | Criterion | Description | Implementation |
