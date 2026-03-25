@@ -96,3 +96,49 @@ ElectroSwap/
 | 5.2 | Transactions | Checkout with `start_transaction()` + snapshot orders |
 | 5.5 | CRUD | Full CRUD on all collections |
 | 5.7 | Extra feature | Wishlist with move-to-cart
+
+## Dokumentation für 5.5 und 5.6 (Nachweis)
+
+### 5.5 Voll ausgebaute Applikation
+
+**Alle Entitätsmengen vorhanden (MongoDB Collections):**
+- `users` (Benutzerkonten + Adresse)
+- `products` (Katalog mit dynamischen Specs)
+- `baskets` (Warenkorb)
+- `wishlists` (Merkliste)
+- `orders` (Bestellhistorie mit Snapshot)
+- `reviews` (Produktbewertungen)
+
+**Indexe umgesetzt (Performance + Integrität):**
+- `users.email` (unique)
+- `products.category`, `products.brand`, `products.price`
+- Textindex auf `products.name`, `products.description`, `products.brand`
+- `baskets.user_id` (unique), `wishlists.user_id`, `orders.user_id`
+- `reviews.product_id` sowie Composite-Unique auf (`product_id`, `user_id`)
+
+**Einfügen / Ändern umgesetzt (Beispiele):**
+- Benutzer registrieren + Profiladresse ändern
+- Admin: Produkte erstellen, bearbeiten, löschen (vollständiges Produkt-CRUD)
+- Warenkorb: Position hinzufügen, Menge ändern, entfernen
+- Wishlist: hinzufügen, entfernen, in Warenkorb verschieben
+- Bestellungen: Checkout erzeugt neue Order, Admin aktualisiert Bestellstatus
+- Reviews: verifizierte Käufer können Bewertungen erfassen
+
+**Mehrere Seiten / Bereiche vorhanden:**
+- Startseite, Produktkatalog, Produktdetail
+- Login, Registrierung, Profil
+- Warenkorb, Wishlist, Bestellverlauf, Checkout
+- Admin-Dashboard, Produktverwaltung, Bestellverwaltung
+
+### 5.6 Professionelles Design und intuitive Bedienung (Voraussetzung 5.5)
+
+**Design-Umsetzung:**
+- Einheitliches, professionelles UI mit Tailwind CSS + klarer Farbpalette (Dark Theme)
+- Konsistentes Layout über alle Seiten (gemeinsame Basis-Template-Struktur)
+- Visuelle Hierarchie mit Karten, Abständen, Icons und Statusfarben (Success/Error/Info)
+
+**Intuitive Bedienung:**
+- Klare Navigation (Top-Navigation + mobile Menüführung)
+- Rollenlogik (User/Admin) zeigt nur relevante Menüpunkte
+- Direkte Benutzerführung mit Flash-Meldungen nach Aktionen (z. B. „Product updated“, „Order placed“)
+- Typische Shop-Workflows ohne Umwege: suchen/filtern → ansehen → Warenkorb/Wishlist → Checkout → Bestellverlauf
