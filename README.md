@@ -125,16 +125,34 @@ Das Design basiert auf einem dunklen Premium-Look mit Akzentfarben für Interakt
 Für die Doku/Präsentation sind diese Screenshots am aussagekräftigsten:
 
 1. **Startseite mit Hero**  
-   Zeigt Branding, Typografie, Farbverlauf und ersten visuellen Eindruck.
-2. **Produktübersicht mit Filtern/Suche**  
-   Zeigt Ergonomie im Alltag: schnelle Orientierung, Sortierung, Sidebar-Filter.
-3. **Produktdetailseite**  
-   Zeigt Informationsstruktur (Bilder, Specs, Preis, CTA, Reviews).
-4. **Warenkorb + Checkout-Schritt**  
-   Zeigt klare User Journey und reduzierte Komplexität beim Kaufprozess.
-5. **Login/Registrierung**  
-   Zeigt Formular-Ergonomie (Labels, Fokus, klare Eingaben).
-6. **Admin-Dashboard (optional)**  
-   Zeigt, dass das Design auch im Backoffice konsistent bleibt.
+   **Warum dieser Screenshot wichtig ist:** Er zeigt den ersten Eindruck der Plattform (Branding, Farbstimmung, Typografie, Navigation).  
+   **Was du in der Doku dazu schreiben kannst:** „Die Startseite setzt mit Dark-Theme, klarer Headline und prägnantem CTA den visuellen Rahmen der Applikation. Bereits im ersten Screen sind Orientierung, Markenbild und Bedienpfad erkennbar.“
 
-Tipp: Wenn nur 2–3 Screenshots möglich sind, nimm **Startseite**, **Produktübersicht** und **Produktdetailseite**.
+2. **Produktübersicht mit Filtern/Suche**  
+   **Warum dieser Screenshot wichtig ist:** Hier wird Ergonomie sichtbar, weil User viele Produkte schnell eingrenzen können.  
+   **Was du in der Doku dazu schreiben kannst:** „Die Katalogseite priorisiert effiziente Produktsuche durch Filter, Sortierung und Suchfunktion. Dadurch werden kognitive Last und Klickwege reduziert, besonders bei grossen Produktmengen.“
+
+3. **Produktdetailseite**  
+   **Warum dieser Screenshot wichtig ist:** Er belegt, dass Informationen strukturiert und entscheidungsrelevant aufbereitet sind (Preis, Spezifikationen, Verfügbarkeit, Bewertung, Kaufaktion).  
+   **Was du in der Doku dazu schreiben kannst:** „Die Produktdetailseite bündelt alle kaufrelevanten Informationen in klar getrennten Bereichen. Der Nutzer kann technische Daten vergleichen, Reviews einsehen und den Kauf direkt mit einem primären CTA auslösen.“
+
+4. **Warenkorb + Checkout-Schritt**  
+   **Warum dieser Screenshot wichtig ist:** Er zeigt die User Journey vom Produkt bis zur Bestellung.  
+   **Was du in der Doku dazu schreiben kannst:** „Der Checkout-Prozess folgt einer logischen Reihenfolge mit klarer Handlungsführung. Mengen, Preise und Zwischensummen sind transparent, wodurch Fehlkäufe reduziert werden.“
+
+5. **Login/Registrierung**  
+   **Warum dieser Screenshot wichtig ist:** Er zeigt Formular-Ergonomie und Vertrauen (klare Labels, Fokuszustände, verständliche Eingabeaufforderung).  
+   **Was du in der Doku dazu schreiben kannst:** „Die Authentifizierungsseiten sind minimalistisch und fokussieren auf schnelle Dateneingabe. Einheitliche Eingabefelder und hohe Kontraste unterstützen eine fehlerarme Bedienung.“
+
+6. **Admin-Dashboard (optional)**  
+   **Warum dieser Screenshot wichtig ist:** Er zeigt, dass das Design nicht nur im Shop, sondern auch im Backoffice konsistent umgesetzt ist.  
+   **Was du in der Doku dazu schreiben kannst:** „Auch im Administrationsbereich bleiben Farb- und Interaktionskonzept konsistent. Kennzahlen und Aktionen sind priorisiert dargestellt, was die operative Pflege vereinfacht.“
+
+### So wirken die Screenshots nicht „random“
+
+- Gib jedem Bild eine **funktionale Überschrift** (z. B. „Produktdetail: Kaufentscheidung unterstützen“ statt nur „Screenshot 3“).
+- Ergänze pro Bild **2–3 Sätze Analyse**: *Was sieht man? Warum ist es ergonomisch sinnvoll? Welches Ziel wird unterstützt?*
+- Verweise bei jedem Bild kurz auf ein GUI-Prinzip (z. B. **Konsistenz**, **visuelle Hierarchie**, **Feedback**, **Effizienz**).
+- Nutze eine feste Struktur in der Doku: **Abbildung → Beobachtung → Begründung → Nutzen für User**.
+
+Tipp: Wenn nur 2–3 Screenshots möglich sind, nimm **Startseite**, **Produktübersicht** und **Produktdetailseite** – diese drei zeigen zusammen Branding, Navigation und Kaufprozess am besten.
