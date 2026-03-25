@@ -101,44 +101,18 @@ ElectroSwap/
 
 ### 5.5 Voll ausgebaute Applikation
 
-**Alle Entitätsmengen vorhanden (MongoDB Collections):**
-- `users` (Benutzerkonten + Adressen)
-- `products` (Katalog mit dynamischen Specs)
-- `baskets` (Warenkorb)
-- `wishlists` (Merkliste)
-- `orders` (Bestellhistorie mit Snapshot)
-- `reviews` (Produktbewertungen)
+Die Applikation erfüllt 5.5, weil alle geforderten Entitätsmengen vollständig umgesetzt und im laufenden System sichtbar sind. In MongoDB werden die Collections `users`, `products`, `baskets`, `wishlists`, `orders` und `reviews` aktiv verwendet; dadurch sind Benutzerverwaltung, Produktkatalog, Kaufprozess und Bewertungssystem klar voneinander getrennt und gleichzeitig miteinander verknüpft. **Screenshot einfügen:** MongoDB-Ansicht mit allen Collections (z. B. Compass links). **Optionales Video (10–20 Sek.):** kurz durch jede Collection klicken und ein Beispiel-Dokument zeigen.
 
-**Indexe umgesetzt (Performance + Integrität):**
-- `users.email` (unique)
-- `products.category`, `products.brand`, `products.price`
-- Textindex auf `products.name`, `products.description`, `products.brand`
-- `baskets.user_id` (unique), `wishlists.user_id`, `orders.user_id`
-- `reviews.product_id` sowie Composite-Unique auf (`product_id`, `user_id`)
+Zusätzlich sind die relevanten Indexe vorhanden, damit Suche, Filterung und Integrität professionell funktionieren. Konkret gibt es einen Unique-Index auf `users.email`, Filter-Indexe auf `products.category`, `products.brand`, `products.price`, einen Textindex auf `products.name`/`products.description`/`products.brand` sowie die User-bezogenen Indexe für `baskets`, `wishlists` und `orders`. Für Reviews verhindert der Composite-Unique-Index (`product_id`, `user_id`) doppelte Bewertungen pro Nutzer und Produkt. **Screenshot einfügen:** Code-Ausschnitt aus `_ensure_indexes()` in `app/__init__.py`. **Optionales Video (15 Sek.):** im Produktkatalog suchen/filtern und die schnelle Reaktion zeigen.
 
-**Einfügen / Ändern umgesetzt (Beispiele):**
-- Benutzer registrieren + Profiladresse ändern
-- Admin: Produkte erstellen, bearbeiten, löschen (vollständiges Produkt-CRUD)
-- Warenkorb: Position hinzufügen, Menge ändern, entfernen
-- Wishlist: hinzufügen, entfernen, in Warenkorb verschieben
-- Bestellungen: Checkout erzeugt neue Order, Admin aktualisiert Bestellstatus
-- Reviews: verifizierte Käufer können Bewertungen erfassen
+Das Kriterium „einfügen/ändern“ ist ebenfalls durchgängig erfüllt: Benutzer können sich registrieren und ihre Profiladresse ändern; im Shop können Produkte in den Warenkorb gelegt, Mengen angepasst und Einträge entfernt werden; Wishlist-Einträge lassen sich hinzufügen, entfernen und in den Warenkorb verschieben; beim Checkout wird eine neue Bestellung erzeugt; im Admin-Bereich können Produkte erstellt, bearbeitet und gelöscht werden, und der Bestellstatus kann angepasst werden. **Screenshot einfügen:** (1) Register/Profil, (2) Cart mit Mengenänderung, (3) Admin-Produktformular beim Bearbeiten. **Optionales Video (30–45 Sek.):** kompletter Mini-Flow „Produkt öffnen → in Cart → Checkout → im Admin Status ändern“.
 
-**Mehrere Seiten / Bereiche vorhanden:**
-- Startseite, Produktkatalog, Produktdetail
-- Login, Registrierung, Profil
-- Warenkorb, Wishlist, Bestellverlauf, Checkout
-- Admin-Dashboard, Produktverwaltung, Bestellverwaltung
+Die Anwendung besteht zudem aus mehreren klar getrennten Seiten und Bereichen: Startseite, Katalog, Produktdetail, Login, Registrierung, Profil, Warenkorb, Wishlist, Checkout, Bestellverlauf sowie Admin-Dashboard mit Produkt- und Bestellverwaltung. Dadurch ist die Applikation nicht nur technisch vollständig, sondern auch als echte, mehrseitige Webanwendung nutzbar. **Screenshot einfügen:** je ein Übersichtsscreenshot aus Customer-Bereich und Admin-Bereich. **Optionales Video (20 Sek.):** Navigation durch Hauptmenü und Admin-Menü.
 
 ### 5.6 Professionelles Design und intuitive Bedienung (Voraussetzung 5.5)
 
-**Design-Umsetzung:**
-- Einheitliches, professionelles User Interface mit Tailwind CSS + klarer Farbpalette (Dark Theme)
-- Konsistentes Layout über alle Seiten (gemeinsame Basis-Template-Struktur)
-- Visuelle Hierarchie mit Karten, Abständen, Icons und Statusfarben (Success/Error/Info)
+Die Anforderung 5.6 ist erfüllt, weil die Oberfläche ein konsistentes und professionelles Erscheinungsbild besitzt. Das User Interface basiert auf einem einheitlichen Dark-Theme mit klarer Farbpalette, wiederkehrenden Komponenten (Karten, Buttons, Formfelder, Meldungen) und einem gemeinsamen Layout über alle Seiten. Dadurch wirkt die Anwendung visuell wie „aus einem Guss“ und nicht wie einzelne, zufällige Unterseiten. **Screenshot einfügen:** Startseite + Produktkatalog nebeneinander, damit man die einheitliche Designsprache direkt sieht. **Optionales Video (10–15 Sek.):** kurzer Wechsel zwischen mehreren Seiten, um die visuelle Konsistenz zu zeigen.
 
-**Intuitive Bedienung:**
-- Klare Navigation (Top-Navigation + mobile Menüführung)
-- Rollenlogik (User/Admin) zeigt nur relevante Menüpunkte
-- Direkte Benutzerführung mit Flash-Meldungen nach Aktionen (z. B. „Product updated“, „Order placed“)
-- Typische Shop-Workflows ohne Umwege: suchen/filtern → ansehen → Warenkorb/Wishlist → Checkout → Bestellverlauf
+Die Bedienung ist intuitiv, weil Nutzer über die Hauptnavigation sofort zu den wichtigsten Bereichen gelangen und mobile Nutzer ein separates Menü mit denselben Kernfunktionen erhalten. Zusätzlich reduziert die Rollenlogik Komplexität: normale Benutzer sehen Shop-Funktionen, Admins erhalten ergänzend den Verwaltungsbereich. Nach Aktionen wie „Produkt aktualisiert“ oder „Bestellung abgeschlossen“ geben Flash-Meldungen sofort verständliches Feedback. **Screenshot einfügen:** Navigation (Desktop oder Mobile) und eine sichtbare Flash-Meldung nach einer Aktion. **Optionales Video (20–30 Sek.):** Login als User vs. Login als Admin, um unterschiedliche Menüpunkte zu demonstrieren.
+
+Auch die zentralen Benutzerpfade sind ohne Umwege aufgebaut: suchen/filtern im Katalog, Produktdetails ansehen, in Cart oder Wishlist legen, Checkout ausführen und anschliessend den Bestellverlauf prüfen. Diese lineare Führung reduziert Fehlbedienung und entspricht dem Verhalten professioneller Shop-Systeme. **Screenshot einfügen:** Sequenz aus 3 Bildern (Katalogfilter → Warenkorb → Bestellverlauf). **Optionales Video (30 Sek.):** kompletter End-to-End-Flow aus Nutzersicht.
