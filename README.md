@@ -44,6 +44,20 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 > Gleichzeitig behalten wir Performance und Datenqualität durch Indizes für die Suche und Transaktionen im Checkout.  
 > Ein klassisches relationales Schema wäre möglich, würde bei unserem variablen Produktmodell aber mehr Komplexität verursachen.“
 
+### Präsentationshilfe: Folie „Sharding, Replikation und Backup“
+
+**Was auf die Folie kann (kurz & klar):**
+- **Sharding (Skalierung):** Daten werden auf mehrere Server verteilt. So kann MongoDB bei wachsendem Traffic horizontal skalieren.
+- **Replikation (Ausfallsicherheit):** Dieselben Daten liegen auf mehreren Knoten (Replica Set). Fällt ein Server aus, übernimmt ein anderer.
+- **Backup (Wiederherstellung):** Regelmäßige Sicherungen (z. B. tägliche Dumps + Point-in-Time-Konzept) schützen vor Datenverlust.
+- **Nutzen für ElectroSwap:** Hohe Verfügbarkeit, bessere Lastverteilung und planbare Wiederherstellung im Störungsfall.
+
+**Was du dazu sagen kannst (Sprechtext):**
+> „Für den produktiven Betrieb ist nicht nur das Datenmodell wichtig, sondern auch Betriebssicherheit.  
+> Mit Sharding kann MongoDB bei steigender Last horizontal wachsen, weil die Daten auf mehrere Maschinen verteilt werden.  
+> Mit Replikation stellen wir sicher, dass bei einem Ausfall ein anderer Knoten übernimmt und die Anwendung weiterläuft.  
+> Und mit regelmäßigen Backups können wir Daten nach Fehlern oder Bedienfehlern zuverlässig wiederherstellen.“
+
 ## Features
 
 - **User Authentication** – Register, login, logout, profile with address editing
