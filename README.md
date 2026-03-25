@@ -101,11 +101,29 @@ ElectroSwap/
 
 ### 5.5 Voll ausgebaute Applikation
 
-Die Applikation erfüllt 5.5, weil alle geforderten Entitätsmengen vollständig umgesetzt und im laufenden System sichtbar sind. In MongoDB werden die Collections `users`, `products`, `baskets`, `wishlists`, `orders` und `reviews` aktiv verwendet; dadurch sind Benutzerverwaltung, Produktkatalog, Kaufprozess und Bewertungssystem klar voneinander getrennt und gleichzeitig miteinander verknüpft. **Screenshot einfügen:** MongoDB-Ansicht mit allen Collections (z. B. Compass links); auf dem Bild soll sichtbar sein, dass alle sechs Collections existieren.
+Die Applikation erfüllt 5.5, weil alle geforderten Entitätsmengen vollständig umgesetzt und im laufenden System sichtbar sind. In MongoDB werden die Collections `users`, `products`, `baskets`, `wishlists`, `orders` und `reviews` aktiv verwendet; dadurch sind Benutzerverwaltung, Produktkatalog, Kaufprozess und Bewertungssystem klar voneinander getrennt und gleichzeitig miteinander verknüpft.
 
-Zusätzlich sind die relevanten Indexe vorhanden, damit Suche, Filterung und Integrität professionell funktionieren. Konkret gibt es einen Unique-Index auf `users.email`, Filter-Indexe auf `products.category`, `products.brand`, `products.price`, einen Textindex auf `products.name`/`products.description`/`products.brand` sowie die User-bezogenen Indexe für `baskets`, `wishlists` und `orders`. Für Reviews verhindert der Composite-Unique-Index (`product_id`, `user_id`) doppelte Bewertungen pro Nutzer und Produkt. **Screenshot einfügen:** Code-Ausschnitt aus `_ensure_indexes()` in `app/__init__.py`; auf dem Bild sollen die definierten Indexe (inkl. unique/text) direkt lesbar sein.
+**Screenshot einfügen:** MongoDB-Ansicht mit allen Collections (z. B. Compass links). Auf dem Bild soll sichtbar sein, dass alle sechs Collections existieren.
 
-Das Kriterium „einfügen/ändern“ ist ebenfalls durchgängig erfüllt: Benutzer können sich registrieren und ihre Profiladresse ändern; im Shop können Produkte in den Warenkorb gelegt, Mengen angepasst und Einträge entfernt werden; Wishlist-Einträge lassen sich hinzufügen, entfernen und in den Warenkorb verschieben; beim Checkout wird eine neue Bestellung erzeugt; im Admin-Bereich können Produkte erstellt, bearbeitet und gelöscht werden, und der Bestellstatus kann angepasst werden. **Screenshot einfügen:** (1) Register/Profil, (2) Cart mit Mengenänderung, (3) Admin-Produktformular beim Bearbeiten; auf den Bildern muss jeweils sichtbar sein, welche Aktion gerade geändert/eingefügt wurde.
+Zusätzlich sind die relevanten Indexe vorhanden, damit Suche, Filterung und Integrität professionell funktionieren.
+
+- Unique-Index auf `users.email`
+- Filter-Indexe auf `products.category`, `products.brand`, `products.price`
+- Textindex auf `products.name`/`products.description`/`products.brand`
+- User-bezogene Indexe für `baskets`, `wishlists` und `orders`
+- Composite-Unique-Index auf `reviews(product_id, user_id)` gegen doppelte Bewertungen
+
+**Screenshot einfügen:** Code-Ausschnitt aus `_ensure_indexes()` in `app/__init__.py`. Auf dem Bild sollen die definierten Indexe (inkl. unique/text) direkt lesbar sein.
+
+Das Kriterium „einfügen/ändern“ ist ebenfalls durchgängig erfüllt:
+
+- **User:** Registrierung und Profiladresse ändern
+- **Shop/Cart:** Produkte in den Warenkorb legen, Mengen anpassen, Einträge entfernen
+- **Wishlist:** Einträge hinzufügen/entfernen und in den Warenkorb verschieben
+- **Orders:** Beim Checkout wird eine neue Bestellung erzeugt
+- **Admin:** Produkte erstellen/bearbeiten/löschen und Bestellstatus anpassen
+
+**Screenshot einfügen:** (1) Register/Profil, (2) Cart mit Mengenänderung, (3) Admin-Produktformular beim Bearbeiten. Auf den Bildern muss jeweils sichtbar sein, welche Aktion gerade geändert/eingefügt wurde.
 
 Die Anwendung besteht zudem aus mehreren klar getrennten Seiten und Bereichen: Startseite, Katalog, Produktdetail, Login, Registrierung, Profil, Warenkorb, Wishlist, Checkout, Bestellverlauf sowie Admin-Dashboard mit Produkt- und Bestellverwaltung. Dadurch ist die Applikation nicht nur technisch vollständig, sondern auch als echte, mehrseitige Webanwendung nutzbar. **Screenshot einfügen:** je ein Übersichtsscreenshot aus Customer-Bereich und Admin-Bereich; die Menüführung und unterschiedlichen Bereiche sollen klar erkennbar sein.
 
