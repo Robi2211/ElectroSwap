@@ -30,6 +30,20 @@ A full-stack e-commerce web application built with **Flask**, **MongoDB**, **Tai
 > Bei den sonstigen Technologien setzen wir auf wichtige Sicherheitsbausteine wie bcrypt für Passwörter, Flask-Login für Sessions und CSRF-Schutz über Flask-WTF.  
 > Für die Performance und Zuverlässigkeit nutzen wir Indizes für die Suche und Transaktionen im Checkout, damit Lagerbestand und Bestellungen konsistent bleiben.“
 
+### Präsentationshilfe: Folie „Warum MongoDB und nicht eine andere Datenbank?“
+
+**Was auf die Folie kann (kurz & klar):**
+- **Flexible Produktdaten:** Jede Kategorie (CPU, GPU, Monitor) hat andere technische Attribute. MongoDB erlaubt ein dynamisches `specs`-Feld ohne starres Tabellen-Schema.
+- **Schnelle Entwicklung:** Weniger Schema-Migrationen bei neuen Produkttypen oder zusätzlichen Feldern.
+- **Passend zum Datenmodell:** Kombination aus Embedding und Referencing (z. B. `users` mit Adresse eingebettet, `orders`/`reviews` referenziert) ist in MongoDB sehr natürlich.
+- **Leistung & Zuverlässigkeit:** Indizes für Suche/Filter und Transaktionen im Checkout für konsistente Bestellungen.
+
+**Was du dazu sagen kannst (Sprechtext):**
+> „Wir haben MongoDB gewählt, weil unser Shop stark unterschiedliche Produktdaten hat: Eine Grafikkarte braucht andere Felder als ein Monitor oder Prozessor.  
+> Mit MongoDB können wir diese Unterschiede in einem flexiblen Dokumentmodell sauber abbilden, ohne ständig Tabellen umzubauen.  
+> Gleichzeitig behalten wir Performance und Datenqualität durch Indizes für die Suche und Transaktionen im Checkout.  
+> Ein klassisches relationales Schema wäre möglich, würde bei unserem variablen Produktmodell aber mehr Komplexität verursachen.“
+
 ## Features
 
 - **User Authentication** – Register, login, logout, profile with address editing
