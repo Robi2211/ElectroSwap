@@ -72,3 +72,7 @@ dmypy.json
 .pytype/
 cython_debug/
 node_modules/
+
+# Project-specific
+backup/dumps/
+.claude/

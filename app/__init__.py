@@ -79,6 +79,7 @@ def create_app():
 def _ensure_indexes(database):
     """Create MongoDB indexes for performance (LB2 criterion 5.1)."""
     database.users.create_index("email", unique=True)
+    database.users.create_index("username", unique=True)
     database.products.create_index("category")
     database.products.create_index("brand")
     database.products.create_index("price")
@@ -88,3 +89,4 @@ def _ensure_indexes(database):
     database.orders.create_index("user_id")
     database.reviews.create_index("product_id")
     database.reviews.create_index([("product_id", 1), ("user_id", 1)], unique=True)
+    database.products.create_index("created_at")

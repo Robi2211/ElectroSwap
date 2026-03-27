@@ -13,7 +13,7 @@ client = MongoClient(MONGO_URI)
 db_name = MONGO_URI.rsplit("/", 1)[-1].split("?")[0]
 db = client[db_name]
 
-TARGET_COUNT = 35
+TARGET_COUNT = 1000
 IMG = "https://placehold.co/600x400/1a1a2e/facc15?text="
 
 
@@ -315,7 +315,7 @@ def seed():
         }
     ]
 
-    while len(customer_docs) < 35:
+    while len(customer_docs) < TARGET_COUNT:
         idx = len(customer_docs)
         name = first_names[idx % len(first_names)]
         city = cities[idx % len(cities)]

@@ -1,29 +1,64 @@
 version: "3.9"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ElectroSwap – Docker Compose (horizontale Skalierung mit 3 App-Nodes)
+# ElectroSwap – Docker Compose
+# MongoDB Replica Set (3 Nodes) + 3 Flask App-Nodes + Nginx
 # ─────────────────────────────────────────────────────────────────────────────
-# Starten:   docker compose up --build
-# Stoppen:   docker compose down
-# Logs:      docker compose logs -f
+# ERSTES STARTEN (neue Volumes nötig):
+#   docker compose down -v && docker compose up --build
+#
+# Normaler Start:
+#   docker compose up -d
+#
+# Logs:
+#   docker compose logs -f
 # ─────────────────────────────────────────────────────────────────────────────
 
 services:
 
-  # ── MongoDB ─────────────────────────────────────────────────────────────────
-  mongo:
+  # ── Keyfile Generator (läuft einmalig) ─────────────────────────────────────
+  # Erstellt den gemeinsamen Authentifizierungsschlüssel für die Replica-Set-
+  # Kommunikation zwischen den MongoDB-Nodes (Inter-Node-Auth via Keyfile).
+  mongo-keyfile:
     image: mongo:7.0
-    container_name: electroswap_mongo
+    container_name: electroswap_mongo_keyfile
+    user: root
+    command: >
+      bash -c "
+        if [ ! -f /keyfile/keyfile ]; then
+          openssl rand -base64 756 > /keyfile/keyfile &&
+          chmod 400 /keyfile/keyfile &&
+          chown 999:999 /keyfile/keyfile &&
+          echo 'Keyfile erstellt.';
+        else
+          echo 'Keyfile bereits vorhanden - wird nicht ueberschrieben.';
+        fi
+      "
+    volumes:
+      - mongo_keyfile:/keyfile
+    restart: "no"
+    networks:
+      - electroswap_net
+
+  # ── MongoDB Node 1 (Primary-Kandidat) ──────────────────────────────────────
+  mongo1:
+    image: mongo:7.0
+    container_name: electroswap_mongo1
+    hostname: mongo1
     restart: unless-stopped
+    depends_on:
+      mongo-keyfile:
+        condition: service_completed_successfully
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--keyFile", "/etc/mongo/keyfile"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: RootPass000!
-      MONGO_INITDB_DATABASE: electroswap
+      MONGO_INITDB_DATABASE: admin
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
-      - ./mongo-init/init-users.js:/docker-entrypoint-initdb.d/init-users.js:ro
+      - mongo1_data:/data/db
+      - mongo_keyfile:/etc/mongo:ro
       - ./backup/dumps:/dump
     networks:
       - electroswap_net
@@ -31,60 +66,136 @@ services:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 15
+      start_period: 40s
 
-  # ── Flask App – Node 1 ───────────────────────────────────────────────────────
+  # ── MongoDB Node 2 (Secondary) ─────────────────────────────────────────────
+  mongo2:
+    image: mongo:7.0
+    container_name: electroswap_mongo2
+    hostname: mongo2
+    restart: unless-stopped
+    depends_on:
+      mongo-keyfile:
+        condition: service_completed_successfully
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--keyFile", "/etc/mongo/keyfile"]
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo2_data:/data/db
+      - mongo_keyfile:/etc/mongo:ro
+    networks:
+      - electroswap_net
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+
+  # ── MongoDB Node 3 (Secondary) ─────────────────────────────────────────────
+  mongo3:
+    image: mongo:7.0
+    container_name: electroswap_mongo3
+    hostname: mongo3
+    restart: unless-stopped
+    depends_on:
+      mongo-keyfile:
+        condition: service_completed_successfully
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--keyFile", "/etc/mongo/keyfile"]
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo3_data:/data/db
+      - mongo_keyfile:/etc/mongo:ro
+    networks:
+      - electroswap_net
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+
+  # ── Replica Set Initialisierung (läuft einmalig nach Node-Start) ───────────
+  # Wartet bis alle 3 Nodes healthy sind, konfiguriert dann das Replica Set
+  # und erstellt alle Applikations-Benutzer auf dem PRIMARY.
+  mongo-init-replica:
+    image: mongo:7.0
+    container_name: electroswap_mongo_init_replica
+    depends_on:
+      mongo1:
+        condition: service_healthy
+      mongo2:
+        condition: service_healthy
+      mongo3:
+        condition: service_healthy
+    volumes:
+      - ./mongo-init/init-replica.js:/init-replica.js:ro
+    command: >
+      mongosh --host mongo1
+              --username root --password RootPass000!
+              --authenticationDatabase admin
+              --quiet /init-replica.js
+    networks:
+      - electroswap_net
+    restart: "no"
+
+  # ── Flask App – Node 1 ─────────────────────────────────────────────────────
   app1:
     build: .
     container_name: electroswap_app1
     restart: unless-stopped
     environment:
       SECRET_KEY: "${SECRET_KEY:-change-this-in-production}"
-      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo:27017/electroswap?authSource=electroswap"
+      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo1:27017,mongo2:27017,mongo3:27017/electroswap?replicaSet=rs0&authSource=electroswap&readPreference=secondaryPreferred"
       FLASK_DEBUG: "0"
+      NODE_NAME: "app1"
     depends_on:
-      mongo:
-        condition: service_healthy
+      mongo-init-replica:
+        condition: service_completed_successfully
     networks:
       - electroswap_net
 
-  # ── Flask App – Node 2 ───────────────────────────────────────────────────────
+  # ── Flask App – Node 2 ─────────────────────────────────────────────────────
   app2:
     build: .
     container_name: electroswap_app2
     restart: unless-stopped
     environment:
       SECRET_KEY: "${SECRET_KEY:-change-this-in-production}"
-      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo:27017/electroswap?authSource=electroswap"
+      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo1:27017,mongo2:27017,mongo3:27017/electroswap?replicaSet=rs0&authSource=electroswap&readPreference=secondaryPreferred"
       FLASK_DEBUG: "0"
+      NODE_NAME: "app2"
     depends_on:
-      mongo:
-        condition: service_healthy
+      mongo-init-replica:
+        condition: service_completed_successfully
     networks:
       - electroswap_net
 
-  # ── Flask App – Node 3 ───────────────────────────────────────────────────────
+  # ── Flask App – Node 3 ─────────────────────────────────────────────────────
   app3:
     build: .
     container_name: electroswap_app3
     restart: unless-stopped
     environment:
       SECRET_KEY: "${SECRET_KEY:-change-this-in-production}"
-      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo:27017/electroswap?authSource=electroswap"
+      MONGO_URI: "mongodb://electroswap_app:AppPass456!@mongo1:27017,mongo2:27017,mongo3:27017/electroswap?replicaSet=rs0&authSource=electroswap&readPreference=secondaryPreferred"
       FLASK_DEBUG: "0"
+      NODE_NAME: "app3"
     depends_on:
-      mongo:
-        condition: service_healthy
+      mongo-init-replica:
+        condition: service_completed_successfully
     networks:
       - electroswap_net
 
-  # ── Nginx Load Balancer ─────────────────────────────────────────────────────
+  # ── Nginx Load Balancer ────────────────────────────────────────────────────
   nginx:
     image: nginx:1.25-alpine
     container_name: electroswap_nginx
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
@@ -95,7 +206,13 @@ services:
       - electroswap_net
 
 volumes:
-  mongo_data:
+  mongo1_data:
+    driver: local
+  mongo2_data:
+    driver: local
+  mongo3_data:
+    driver: local
+  mongo_keyfile:
     driver: local
 
 networks:

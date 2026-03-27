@@ -22,7 +22,7 @@ echo ""
 
 # Aktuellen Datenbankstand anzeigen
 echo "  Zustand VOR dem Backup:"
-docker exec electroswap_mongo mongosh electroswap \
+docker exec electroswap_mongo1 mongosh electroswap \
     --username electroswap_admin \
     --password "AdminPass123!" \
     --authenticationDatabase electroswap \
@@ -35,7 +35,7 @@ echo ""
 echo "  Starte mongodump..."
 echo ""
 
-docker exec electroswap_mongo mongodump \
+docker exec electroswap_mongo1 mongodump \
     --username electroswap_readonly \
     --password "ReadPass789!" \
     --authenticationDatabase electroswap \

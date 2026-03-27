@@ -39,7 +39,7 @@ echo ""
 
 # ── Zustand VOR dem Restore ──────────────────────────────────
 echo "  ┌─ Zustand VOR dem Restore ─────────────────────────────┐"
-docker exec electroswap_mongo mongosh electroswap \
+docker exec electroswap_mongo1 mongosh electroswap \
     --username electroswap_admin \
     --password "AdminPass123!" \
     --authenticationDatabase electroswap \
@@ -54,7 +54,7 @@ echo ""
 echo "  Starte mongorestore (--drop: bestehende Collections werden überschrieben)..."
 echo ""
 
-gunzip -c "$ARCHIVE" | docker exec -i electroswap_mongo mongorestore \
+gunzip -c "$ARCHIVE" | docker exec -i electroswap_mongo1 mongorestore \
     --username electroswap_admin \
     --password "AdminPass123!" \
     --authenticationDatabase electroswap \
@@ -66,7 +66,7 @@ echo ""
 
 # ── Zustand NACH dem Restore ─────────────────────────────────
 echo "  ┌─ Zustand NACH dem Restore ────────────────────────────┐"
-docker exec electroswap_mongo mongosh electroswap \
+docker exec electroswap_mongo1 mongosh electroswap \
     --username electroswap_admin \
     --password "AdminPass123!" \
     --authenticationDatabase electroswap \
